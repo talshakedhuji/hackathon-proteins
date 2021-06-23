@@ -71,7 +71,7 @@ def rmsd_calc(coords1, coords2):
     sup = SVDSuperimposer()
     sup.set(coords1, coords2)
     sup.run()
-    return sup.get_rms()
+    return "{:0.3f}".format(sup.get_rms())
 
 
 def present_rmsd(list_of_rmsds):
@@ -108,19 +108,20 @@ def run():
     # create ca pdb file
     ca_file_name = "output.pdb" #"{}_nanonet_ca.pdb".format(file_name.split(".")[0])
     ca_mutated_file_name = "./outputs/mutated_{}.pdb"
+    print("###", rmsd_calc(ca_coords,ca_coords))
     with open(ca_file_name, "w") as ca_file:
         matrix_to_pdb(ca_file, sequence, ca_coords)
     all_results = []
     num_of_mutations = 5
     for i in range(num_of_mutations):
         data = {}
-        data["num_of_mutation"] = seq_mutation.get_num_of_mutation(len(sequence))
-        data["mutate_seq"] = seq_mutation.calc_mutate_sequence(sequence, data["num_of_mutation"])
+        data["num_of_changes"] =1# seq_mutation.get_num_of_mutation(len(sequence))
+        data["mutate_seq"] = seq_mutation.calc_mutate_sequence(sequence, data["num_of_changes"])
         data["coords"] = predict(nanonet, data["mutate_seq"])
         data["file_name"] = ca_mutated_file_name.format(i)
-        data["rmsd"] = rmsd_calc(ca_coords, data["coors"])
-        print(data["file_name"])
+        data["rmsd"] = rmsd_calc(ca_coords, data["coords"])
+        print(data["rmsd"])
         with open(data["file_name"], "w") as ca_mutate_file:
             matrix_to_pdb(ca_mutate_file, data["mutate_seq"], data["coords"])
         all_results.append(data)
-    present_rmsd(ca_file_name, tuple(map(lambda x: x["rmsd"], all_results)))
+    present_rmsd(tuple(map(lambda x: x["rmsd"], all_results)))
