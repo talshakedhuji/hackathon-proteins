@@ -1,4 +1,5 @@
 from Bio import SeqIO
+from collections import defaultdict
 
 AA_NAMES = ["A", "C", "D", "E", "F", "G", "H", "I", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "W", "Y", "V", "-", "X"]
 
@@ -31,8 +32,25 @@ def extract_lengths(sequences):
     return lengths_map
 
 
+def extract_AA_frequencies(sequences):
+    freq_dict = defaultdict(float)
+
+    count = 0.0
+    for seq in sequences:
+        for aa in seq:
+            freq_dict[aa] += 1
+            count += 1
+
+    if count > 0:
+        for key in freq_dict:
+            freq_dict[key] = freq_dict[key] / count
+    return freq_dict
+
+
 if __name__ == '__main__':
     fasta_filename = "AboutMillionSequencesNew.fasta"
     sequences = get_sequence(fasta_filename)
     length_counts = extract_lengths(sequences)
     print(length_counts)
+    freq_dict = extract_AA_frequencies(sequences)
+    print(freq_dict)
