@@ -35,7 +35,7 @@ def get_num_of_mutation(sequence, data):
     """
     :param sequence: String of given seq
     :param data: list of sequences from the DB with same length
-    :return: retuning number of mutation to apply on given sequence
+    :return: number of mutation to apply on given sequence
     """
     return 3
 
