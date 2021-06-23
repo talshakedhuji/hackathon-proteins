@@ -2,6 +2,7 @@
 
 # Press ⌃R to execute it or replace it with your code. dvD
 # Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+import sys
 
 import tensorflow as tf
 from tensorflow.keras import layers
@@ -22,8 +23,9 @@ if __name__ == '__main__':
     # predict
     import os
 
-    input_6dlb = utils.generate_input(ref_path)
+    seq_input = sys.argv[1]
+    net_input = utils.generate_input("", False);
 
-    predict_dist, _, _, _ = model.predict(np.asarray([input_6dlb]))
+    predict_dist, _, _, _ = model.predict(np.asarray([net_input]))
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
