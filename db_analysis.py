@@ -20,18 +20,18 @@ def get_sequence(fasta_filename_input):
 
 def extract_lengths(sequences):
     """
-    Returns the counts for each sequences length
+    Returns the the sequences grouped by their length
     :param sequences: list of aa sequences
-    :return: dictionary of seq lengths with counts
+    :return: dictionary of sequences by length
     """
-    lengths_map = {}
+    seq_by_length = {}
     for s in sequences:
         length = str(len(s))
-        if length in lengths_map:
-            lengths_map[length] = lengths_map[length] + 1
+        if length in seq_by_length:
+            seq_by_length[length].append(s)
         else:
-            lengths_map[length] = 1
-    return lengths_map
+            seq_by_length[length] = [s]
+    return seq_by_length
 
 
 def extract_AA_frequencies(sequences):
@@ -57,7 +57,7 @@ def extract_AA_frequencies(sequences):
 if __name__ == '__main__':
     fasta_filename = "AboutMillionSequencesNew.fasta"
     sequences = get_sequence(fasta_filename)
-    length_counts = extract_lengths(sequences)
-    print(length_counts)
-    freq_dict = extract_AA_frequencies(sequences)
-    print(freq_dict)
+    seq_by_length = extract_lengths(sequences)
+    print(seq_by_length)
+    # freq_dict = extract_AA_frequencies(sequences)
+    # print(freq_dict)
