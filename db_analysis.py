@@ -1,16 +1,18 @@
 from Bio import SeqIO
 from collections import defaultdict
 
-AA_NAMES = ["A", "C", "D", "E", "F", "G", "H", "I", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "W", "Y", "V", "-", "X"]
+AA_NAMES = ["A", "C", "D", "E", "F", "G", "H", "I", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "W", "Y", "V", "-",
+            "X"]
 
-def get_sequence(fasta_filename):
+
+def get_sequence(fasta_filename_input):
     """
     returns a list of sequences from the given fasta file
     :param fasta_filename: name of the fasta file to be parsed
     :return: a list of the fasta sequences
     """
     sequences = []
-    for seq_record in SeqIO.parse(fasta_filename, "fasta"):
+    for seq_record in SeqIO.parse(fasta_filename_input, "fasta"):
         sequence = str(seq_record.seq)
         sequences.append(sequence)
     return sequences
