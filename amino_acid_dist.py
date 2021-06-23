@@ -24,5 +24,3 @@ AMINO_ACID_DIST = {
     "V": 0.068,
     "X": 0,
     "-": 0}
-
-print(sum(AMINO_ACID_DIST.values()))
