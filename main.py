@@ -62,7 +62,7 @@ def rmsd_calc(file1, file2):
     #TODO (amos): Add rmsd function
     return random.random()
     
-def present_rmds(orig_pdb_path, list_of_pdbs):
+def present_rmsd(orig_pdb_path, list_of_pdbs):
     rmsds = [rmsd_calc(orig_pdb_path, result["file_name"]) for result in list_of_pdbs]
     plt.plot(rmsds)
     plt.show()
@@ -103,4 +103,4 @@ def run():
         with open(data["file_name"], "w") as ca_mutate_file:
             matrix_to_pdb(ca_mutate_file, data["mutate_seq"], ca_coords_mutation)
         all_results.append(data)
-    present_rmds(ca_file_name, all_results)
+    present_rmsd(ca_file_name, all_results)
