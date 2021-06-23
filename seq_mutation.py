@@ -59,7 +59,10 @@ def calc_mutate_sequence(sequence: str, num_of_mutations_to_perform: int):
     for _ in range(num_of_mutations_to_perform):
         rand_cdr_method = random.choice(CDR_METHODS)
         [left_cdr, right_cdr] = rand_cdr_method(sequence=sequence)
-        mutation_aa = random.choices(list(AMINO_ACID_DIST.keys()), list(AMINO_ACID_DIST.values()))[0]
         rand_position = random.randrange(left_cdr, right_cdr)
+        original_aa = list_seq[rand_position]
+        temp_AA_dist = AMINO_ACID_DIST.copy()
+        temp_AA_dist.pop(original_aa)
+        mutation_aa = random.choices(list(temp_AA_dist.keys()), list(temp_AA_dist.values()))[0]
         list_seq[rand_position] = mutation_aa
     return "".join(list_seq)
