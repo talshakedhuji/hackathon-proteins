@@ -1,10 +1,9 @@
-import dataclasses
-import Bio
 import random
-from Bio.Seq import Seq
+import numpy
+import cdr_annotation
+
 # http://www.tiem.utk.edu/~gross/bioed/webmodules/aminoacid.htm
 # Distribution of AA in Human body
-
 AMINO_ACID_DIST = {
     "A": 0.074,
     "C": 0.033,
@@ -28,16 +27,32 @@ AMINO_ACID_DIST = {
     "V": 0.068,
     "X": 0,
     "-": 0}
-import cdr_annotation
-import toolz
+
+
 CDR_METHODS = [cdr_annotation.find_cdr1, cdr_annotation.find_cdr2, cdr_annotation.find_cdr3]
-def get_num_of_mutation(sequence, data):
+
+def get_num_of_diffs(seq1, seq2):
+    """
+       :param seq1: first sequence
+       :param seq2: second sequence
+       :return: number of mutation btw the two sequences
+       """
+    return sum(1 for a, b in zip(seq1, seq2) if a != b)
+MAX_CHANGES = 5
+def get_num_of_mutation(sequence, len_to_seq):
     """
     :param sequence: String of given seq
     :param data: list of sequences from the DB with same length
     :return: number of mutation to apply on given sequence
     """
-    return 3
+    x = [0]*MAX_CHANGES
+    for record in len_to_seq[len(record)]:
+        diffs = get_num_of_diffs(sequence, record)
+        if diffs > MAX_CHANGES or diffs == 0:
+            continue
+        x[diffs-1] += 1
+    return random.choices(numpy.array(range(MAX_CHANGES))+1, k=1, weights=x)[0]
+
 
 def calc_mutate_sequence(sequence: str, num_of_mutations_to_perform: int):
     list_seq = list(sequence)
