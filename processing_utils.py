@@ -114,8 +114,9 @@ if __name__ == '__main__':
     name_prefix = "7168_4th_CoV2_BL"
     cluster_filename = "Data/out.clstr"
     output_clustering = "output_clustering.pkl"
-    rmsd_data_output_name = "rmsd_data_output_name.pkl"
+    rmsd_data_output_name = "rmsd_data_output.pkl"
 
     # process_db(fasta_filename, processed_filename, name_prefix)
     # process_clustering(processed_filename, cluster_filename, output_clustering)
+
     calculate_clusters_rmsd(output_clustering, rmsd_data_output_name)

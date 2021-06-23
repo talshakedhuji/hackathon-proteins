@@ -61,12 +61,12 @@ if __name__ == '__main__':
     seq_by_length = extract_lengths(sequences)
     freq_dict = extract_AA_frequencies(sequences)
 
-    # save data
-    with open('Data/seq_by_length.pickle', 'wb') as handle:
-        pkl.dump(seq_by_length, handle)
-
-    with open('Data/freq_dict.pickle', 'wb') as handle:
-        pkl.dump(freq_dict, handle)
+    # # save data
+    # with open('Data/seq_by_length.pickle', 'wb') as handle:
+    #     pkl.dump(seq_by_length, handle)
+    #
+    # with open('Data/freq_dict.pickle', 'wb') as handle:
+    #     pkl.dump(freq_dict, handle)
 
     # # load (for DEBUG)
     # with open('Data/seq_by_length.pickle', 'rb') as handle:
