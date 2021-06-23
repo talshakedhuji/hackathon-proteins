@@ -1,7 +1,7 @@
 import random
 import numpy
 import cdr_annotation
-
+import toolz
 # http://www.tiem.utk.edu/~gross/bioed/webmodules/aminoacid.htm
 # Distribution of AA in Human body
 AMINO_ACID_DIST = {
@@ -30,7 +30,7 @@ AMINO_ACID_DIST = {
 
 
 CDR_METHODS = [cdr_annotation.find_cdr1, cdr_annotation.find_cdr2, cdr_annotation.find_cdr3]
-
+from Bio import pairwise2
 def get_num_of_diffs(seq1, seq2):
     """
        :param seq1: first sequence
@@ -38,20 +38,34 @@ def get_num_of_diffs(seq1, seq2):
        :return: number of mutation btw the two sequences
        """
     return sum(1 for a, b in zip(seq1, seq2) if a != b)
-MAX_CHANGES = 5
-def get_num_of_mutation(sequence, len_to_seq):
+#MAX_CHANGES = 5
+def calc_distribution_for_sequance(sequence, len_to_seq):
+    MAX_CHANGES = len(sequence)
+    x = [0] * MAX_CHANGES
+    for record in len_to_seq[str(len(sequence))]:
+        diffs = 0
+        for cdr_method in CDR_METHODS:
+            [ind1, ind2] = cdr_method(sequence)
+            [ind1_record, ind2_record] = cdr_method(record)
+            sub_seq = sequence[ind1:ind2]
+            sub_seq_record = sequence[ind1_record:ind2_record]
+            alignments = pairwise2.align.globalxx(sub_seq, sub_seq_record)
+
+            diffs += int(abs(len(sub_seq) - alignments[0].score))
+        if diffs > MAX_CHANGES or diffs == 0:
+            continue
+        x[diffs - 1] += 1
+    print(x)
+    return x
+
+
+def get_num_of_mutation(distribuation):
     """
     :param sequence: String of given seq
     :param data: list of sequences from the DB with same length
     :return: number of mutation to apply on given sequence
     """
-    x = [0]*MAX_CHANGES
-    for record in len_to_seq[len(record)]:
-        diffs = get_num_of_diffs(sequence, record)
-        if diffs > MAX_CHANGES or diffs == 0:
-            continue
-        x[diffs-1] += 1
-    return random.choices(numpy.array(range(MAX_CHANGES))+1, k=1, weights=x)[0]
+    return random.choices(numpy.array(range(len(distribuation)))+1, k=1, weights=distribuation)[0]
 
 
 def calc_mutate_sequence(sequence: str, num_of_mutations_to_perform: int, mutations_by_position):
