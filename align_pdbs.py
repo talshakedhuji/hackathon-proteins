@@ -4,7 +4,7 @@ import platform
 
 
 def create_pdb_img(ref_pdb_path, target_pdb_path, out_path_dir):
-    if platform.system() != 'Linux':
+    if platform.system() == 'Linux':
         try:
             pm = pymolPy3.pymolPy3()
             target_file_name = os.path.basename(target_pdb_path)
