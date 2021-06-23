@@ -54,7 +54,7 @@ def get_num_of_mutation(sequence, len_to_seq):
     return random.choices(numpy.array(range(MAX_CHANGES))+1, k=1, weights=x)[0]
 
 
-def calc_mutate_sequence(sequence: str, num_of_mutations_to_perform: int):
+def calc_mutate_sequence(sequence: str, num_of_mutations_to_perform: int, mutations_by_position):
     list_seq = list(sequence)
     for _ in range(num_of_mutations_to_perform):
         rand_cdr_method = random.choice(CDR_METHODS)
@@ -65,4 +65,8 @@ def calc_mutate_sequence(sequence: str, num_of_mutations_to_perform: int):
         temp_AA_dist.pop(original_aa)
         mutation_aa = random.choices(list(temp_AA_dist.keys()), list(temp_AA_dist.values()))[0]
         list_seq[rand_position] = mutation_aa
+        if str(rand_position) in mutations_by_position:
+            mutations_by_position[str(rand_position)].append(mutation_aa)
+        else:
+            mutations_by_position[str(rand_position)] = [mutation_aa]
     return "".join(list_seq)

@@ -102,11 +102,13 @@ def run(model_path, fasta):
     num_of_mutations = 5
     for i in range(num_of_mutations):
         data = {}
+        mutations_by_position = {}
         data["num_of_changes"] =1# seq_mutation.get_num_of_mutation(len(sequence))
-        data["mutate_seq"] = seq_mutation.calc_mutate_sequence(sequence, data["num_of_changes"])
+        data["mutate_seq"] = seq_mutation.calc_mutate_sequence(sequence, data["num_of_changes"], mutations_by_position)
         data["coords"] = predict(nanonet, data["mutate_seq"])
         data["file_name"] = ca_mutated_file_name.format(i)
         data["rmsd"] = rmsd_calc(ca_coords, data["coords"])
+        data["mutations_by_position"] = mutations_by_position
         print(data["rmsd"])
         with open(data["file_name"], "w") as ca_mutate_file:
             matrix_to_pdb(ca_mutate_file, data["mutate_seq"], data["coords"])
