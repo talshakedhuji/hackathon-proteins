@@ -1,5 +1,6 @@
 tensorflow~=2.5.0
 numpy~=1.19.5
 bio~=0.5.0
-matplotlib
+matplotlib~=3.4.2
 toolz
+pymolPy3~=0.1.2
