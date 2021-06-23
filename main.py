@@ -84,31 +84,18 @@ def present_rmsd(list_of_rmsds):
     plt.show()
 
 
-def run():
-    """
-    receives path to a Nb fasta file and a path to a trained neural network and creates a pdb file (Ca only) according to
-    the network prediction. the output file name is: "<fasta file name>_nanonet_ca.pdb"
-    """
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument("fasta", help="Nb fasta file")
-    # parser.add_argument("network", help="nanonet trained model")
+def run(model_path, fasta):
 
-    # args = parser.parse_args()
-    
-    # nanonet = tf.keras.models.load_model(args.network)
-    nanonet = tf.keras.models.load_model('./TrainedNanoNet')
+    nanonet = tf.keras.models.load_model(model_path)
     # nanobody sequence
     file_name = "./SolvedNbs/Nb34/Nb34.fa"
-    sequence = utils.get_sequence("./SolvedNbs/Nb34/Nb34.fa")
-    # sequence = utils.get_sequence(args.fasta)
+    sequence = utils.get_sequence(fasta)
 
     # ca coordinates
-    ca_coords = predict(nanonet,sequence)
-
+    ca_coords = predict(nanonet, sequence)
     # create ca pdb file
-    ca_file_name = "output.pdb" #"{}_nanonet_ca.pdb".format(file_name.split(".")[0])
+    ca_file_name = "./outputs/{}_nanonet_ca.pdb".format(file_name.split(".")[0])
     ca_mutated_file_name = "./outputs/mutated_{}.pdb"
-    print("###", rmsd_calc(ca_coords,ca_coords))
     with open(ca_file_name, "w") as ca_file:
         matrix_to_pdb(ca_file, sequence, ca_coords)
     all_results = []
@@ -125,3 +112,16 @@ def run():
             matrix_to_pdb(ca_mutate_file, data["mutate_seq"], data["coords"])
         all_results.append(data)
     present_rmsd(tuple(map(lambda x: x["rmsd"], all_results)))
+
+
+def temp_run(): #TODO(rachel): Change to main
+    """
+    receives path to a Nb fasta file and a path to a trained neural network and creates a pdb file (Ca only) according to
+    the network prediction. the output file name is: "<fasta file name>_nanonet_ca.pdb"
+    """
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument("fasta", help="Nb fasta file")
+    # parser.add_argument("network", help="nanonet trained model")
+
+    # args = parser.parse_args()
+    return run("./TrainedNanoNet", "./SolvedNbs/Nb34/Nb34.fa", )
