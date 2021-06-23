@@ -1,5 +1,6 @@
 from Bio import SeqIO
 from collections import defaultdict
+import pickle as pkl
 
 AA_NAMES = ["A", "C", "D", "E", "F", "G", "H", "I", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "W", "Y", "V", "-",
             "X"]
@@ -58,6 +59,21 @@ if __name__ == '__main__':
     fasta_filename = "AboutMillionSequencesNew.fasta"
     sequences = get_sequence(fasta_filename)
     seq_by_length = extract_lengths(sequences)
-    print(seq_by_length)
-    # freq_dict = extract_AA_frequencies(sequences)
-    # print(freq_dict)
+    freq_dict = extract_AA_frequencies(sequences)
+
+    # save data
+    with open('Data/seq_by_length.pickle', 'wb') as handle:
+        pkl.dump(seq_by_length, handle)
+
+    with open('Data/freq_dict.pickle', 'wb') as handle:
+        pkl.dump(freq_dict, handle)
+
+    # # load (for DEBUG)
+    # with open('Data/seq_by_length.pickle', 'rb') as handle:
+    #     a = pkl.load(handle)
+    #
+    # with open('Data/freq_dict.pickle', 'rb') as handle:
+    #     b = pkl.load(handle)
+    #
+    # print(a)
+    # print(b)
