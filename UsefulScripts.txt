@@ -1,0 +1,43 @@
+
+1.
+############ calculates RMSD between two pdbs (remove -t flag in order to calculate RMSD without alignment) ############
+
+/cs/staff/dina/utils/rmsd -t <target.pdb> <model.pdb>
+
+2.
+#### fast sequence clustering, see full documentation here: https://github.com/weizhongli/cdhit/wiki/3.-User's-Guide ###
+
+/cs/labs/dina/tomer.cohen13/cdhit-master/cd-hit -i <input fasta> -o <full path of output> -c <sequence identity threshold> -n <word size> -M <RAM to use> -T <number of threads>
+
+3.
+############## aligns model.pdb to target.pdb and outputs the aligned model.pdb to file named "model_tr.pdb" ###########
+
+/cs/staff/dina/scripts/alignRMSD.pl <target.pdb> <model.pdb>
+
+4.
+######## puts the chain <chain letter> atoms from <start> to <end> into a new file (for creating a pdb of only #########
+######## CDR3 for example) make sure to use it only after renumbering the pdb file with the renumber program.  #########
+
+/cs/staff/dina/utils/get_frag_chain.Linux <pdb file> <chain letter> <start> <end> > <fragment file name>
+
+5.
+################ alignment for molecules with different length, talk to me (Tomer) before using it #####################
+~dina/scripts/alignMP.pl <target.pdb> <model.pdb> <output.pdb>
+
+
+6.
+########################################### renumbers pdb from 1 without gaps/repetitions ##############################
+/cs/staff/dina/utils/srcs/renumber/renumber <pdb file> > <renumber pdb file>
+
+
+7.
+########################################### select only a specific chain of a PDB ######################################
+/cs/staff/dina/utils/getChain.Linux <chain letters> <pdb file> > <new pdb with only chain letter>
+
+8.
+########################################### coverts pdb file into a fasta file #########################################
+/cs/staff/dina/utils/pdb2fasta <pdb file> > <fasta file>
+
+9.
+########################################### rename chain of a pdb  #####################################################
+/cs/staff/dina/scripts/namechain.pl <pdb file> <new chain letter>

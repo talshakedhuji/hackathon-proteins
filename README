@@ -1,0 +1,37 @@
+Files:
+
+1. HackatonUtils.py:
+for preprocessing the data for the network (output/input)
+
+    functions you might need to use:
+    1. get_sequence - receives a path to fasta file and returns its sequence (String)
+    2. get_seq_aa - same as ex4
+    3. generate_input - receives a path to a fasta file / sequence (string) and returns its one-hot encoding in a 140*22
+    matrix (to use as input for the trained network)
+    4. generate_label - receives a path to a pdb file and returns its Ca x,y,z coordinates in a 140*3 matrix
+    (to use as output for the trained network). YOU PROBABLY WON'T NEED TO USE THIS FUNCTION, IF YOU ARE USING IT, TALK
+    TO ME FIRST (IT ONLY WORKS AFTER ALIGNMENT)!
+
+2. HackatonCatoPDB:
+for converting the network output to PDB file (only ca atoms)
+usage-  python3 HackatonCatoPDB.py <path to Nb fasta file> <path to the trained network>
+
+outputs a pdb file with the name "<fasta file name>_nanonet_ca.pdb"
+
+
+3. TrainedNanoNet:
+a trained neural network receives a 140*22 matrix (padded one-hot encoding of the whole Nb sequence) and returns a 140*3
+matrix (padded Ca coordinates).
+
+4. AboutMillionSequencesNew.fasta:
+fasta file with ~1M Nb sequences
+
+
+5. UsefulScripts.txt
+a list of useful scripts that you can use (like sequence clustering, alignment, etc)
+
+6. SolvedNbs
+a folder with 6 solved Nbs (fasta and pdb). relevent for the clustering groups.
+
+7. AlignmentRef.pdb
+only relevent for the TCR group (I think). You only need it if you are using the get_label() function.
