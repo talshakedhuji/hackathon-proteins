@@ -62,9 +62,8 @@ def rmsd_calc(file1, file2):
     #TODO (amos): Add rmsd function
     return random.random()
     
-def present_rmsd(orig_pdb_path, list_of_pdbs):
-    rmsds = [rmsd_calc(orig_pdb_path, result["file_name"]) for result in list_of_pdbs]
-    plt.plot(rmsds)
+def present_rmsd(list_of_rmsds):
+    plt.plot(list_of_rmsds)
     plt.show()
 def run():
     """
@@ -93,14 +92,16 @@ def run():
     with open(ca_file_name, "w") as ca_file:
         matrix_to_pdb(ca_file, sequence, ca_coords)
     all_results = []
-    for i in range(5):
+    num_of_mutations = 5
+    for i in range(num_of_mutations):
         data = {}
         data["num_of_mutation"] = seq_mutation.get_num_of_mutation(len(sequence))
         data["mutate_seq"] = seq_mutation.calc_mutate_sequence(sequence, data["num_of_mutation"])
-        ca_coords_mutation = predict(nanonet, data["mutate_seq"])
-        data["file_name"] = ca_mutated_file_name.format(i) 
+        data["coords"] = predict(nanonet, data["mutate_seq"])
+        data["file_name"] = ca_mutated_file_name.format(i)
+        data["rmsd"] = rmsd_calc() #TODO 
         print(data["file_name"])
         with open(data["file_name"], "w") as ca_mutate_file:
-            matrix_to_pdb(ca_mutate_file, data["mutate_seq"], ca_coords_mutation)
+            matrix_to_pdb(ca_mutate_file, data["mutate_seq"], data["coords"])
         all_results.append(data)
-    present_rmsd(ca_file_name, all_results)
+    present_rmsd(ca_file_name, tuple(map(lambda x: x["rmsd"], all_results)))

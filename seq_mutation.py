@@ -1,7 +1,7 @@
 import dataclasses
+import Bio
 
-
-def get_num_of_mutation(seq_len: int, ):
+def get_num_of_mutation(seq: int, ):
     """
     :param clustering: 
     :param seq: 
