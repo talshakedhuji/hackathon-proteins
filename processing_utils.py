@@ -83,7 +83,7 @@ def process_clustering(processed_filename, cluster_filename, output_name):
 
 def calculate_clusters_rmsd(output_clustering, rmsd_data_output_name):
     """
-
+    calculates the RMSD scores for the largest clusters (in order to use this info to decide on thresholds)
     :param output_clustering:
     :return:
     """
