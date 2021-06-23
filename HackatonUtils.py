@@ -1,7 +1,6 @@
 from Bio.PDB import *
 import numpy as np
 from Bio import SeqIO
-
 # max length of Nb
 NB_MAX_LENGTH = 140
 
