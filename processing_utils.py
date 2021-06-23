@@ -1,5 +1,7 @@
 from Bio import SeqIO
 import pickle as pkl
+import tensorflow as tf
+import main
 
 
 def process_db(fasta_filename, processed_filename, name_prefix):
@@ -79,12 +81,41 @@ def process_clustering(processed_filename, cluster_filename, output_name):
         pkl.dump(seq_clusters, handle)
 
 
+def calculate_clusters_rmsd(output_clustering, rmsd_data_output_name):
+    """
+
+    :param output_clustering:
+    :return:
+    """
+    with open(output_clustering, 'rb') as handle:
+        clusters = pkl.load(handle)
+
+    nanonet = tf.keras.models.load_model('./TrainedNanoNet')
+    rmsd_data = {}
+
+    for c in clusters:
+        if len(clusters[c]) > 10000:
+            print("calculating RMSD for cluster {}".format(c))
+            ca_coords = main.predict(nanonet, c)
+            rmsds = []
+            for member in clusters[c]:
+                member_ca_coords = main.predict(nanonet, member)
+                rmsds.append(main.rmsd_calc(ca_coords, member_ca_coords))
+            rmsd_data[c] = rmsds
+
+    print(rmsd_data)
+    with open(rmsd_data_output_name, 'wb') as handle:
+        pkl.dump(rmsd_data, handle)
+
+
 if __name__ == '__main__':
     fasta_filename = "AboutMillionSequencesNew.fasta"
     processed_filename = "AboutMillionSequencesProcessed.fasta"
     name_prefix = "7168_4th_CoV2_BL"
     cluster_filename = "Data/out.clstr"
     output_clustering = "output_clustering.pkl"
-    # process_db(fasta_filename, processed_filename, name_prefix)
-    process_clustering(processed_filename, cluster_filename, output_clustering)
+    rmsd_data_output_name = "rmsd_data_output_name.pkl"
 
+    # process_db(fasta_filename, processed_filename, name_prefix)
+    # process_clustering(processed_filename, cluster_filename, output_clustering)
+    calculate_clusters_rmsd(output_clustering, rmsd_data_output_name)
