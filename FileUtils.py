@@ -8,6 +8,7 @@ import _pickle as cPickle
 
 
 # Pickle a file and then compress it into a file with extension
+
 def compressed_pickle(title, data):
     with bz2.BZ2File(title + '.pbz2', 'w') as f:
         cPickle.dump(data, f)
@@ -21,9 +22,9 @@ def decompress_pickle(file):
 
 
 def test():
-    objectRep = open("seq_by_length.pickle", "rb")
+    objectRep = open("rmsd_data_output.pkl", "rb")
     object1 = pickle.load(objectRep)
-    compressed_pickle("seq_by_len_comp", object1)
+    compressed_pickle("rmsd_data_output_comp", object1)
 
 
 def test_load():
