@@ -9,13 +9,11 @@ import platform
 import subprocess
 
 def create_pdb_img(ref_pdb_path, target_pdb_path, out_path_dir):
-    if platform.system() != 'Linux':
+    if platform.system() == 'Linux':
         try:
             # Run command install
             try:
-                test = subprocess.Popen(["pip install bioinfo",
-                                         "module load bioinfo",
-                                         "pip install pymol",
+                test = subprocess.Popen(["module load bioinfo",
                                          "module load pymol"], stdout=subprocess.PIPE)
                 output = test.communicate()[0]
                 print(f'cmd command output: {output}')
@@ -55,6 +53,7 @@ def create_pdb_img(ref_pdb_path, target_pdb_path, out_path_dir):
             pm(f"zoom")
             pm(f"png {out_path_dir}/align_img")
             print(f"Done! the image is here: '{out_path_dir}/align_img.png'")
+
         except Exception as e:
             print(f'Failed creating image: {e}')
 
