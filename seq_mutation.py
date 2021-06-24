@@ -1,7 +1,6 @@
 import random
 import numpy
 import cdr_annotation
-import toolz
 # http://www.tiem.utk.edu/~gross/bioed/webmodules/aminoacid.htm
 # Distribution of AA in Human body
 AMINO_ACID_DIST = {
