@@ -65,20 +65,19 @@ def get_num_of_mutation(distribution):
     """
     return random.choices(numpy.array(range(len(distribution)))+1, k=1, weights=distribution)[0]
 
+
 def get_random_letter():
     """
     return a random AA letter
-    :return: aa character
+    :return: a character
     """
     return random.choices(list(AMINO_ACID_DIST.keys()), list(AMINO_ACID_DIST.values()))[0]
 
 
 def _get_random_position(sequence):
     """
-    returns a position that havn't been picked yet
     :param sequence: given sequence
-    :param positions: list of "unavailable" posiitons
-    :return: a random position under the constraints of unique position for each mutation
+    :return: returns a random a new position
     """
     rand_cdr_method = random.choice(CDR_METHODS)
     [left_cdr, right_cdr] = rand_cdr_method(sequence=sequence)
@@ -86,19 +85,19 @@ def _get_random_position(sequence):
     return rand_position
 
 
-def mutations_by_position(sequence_source:str, dest_sequance:str):
+def mutations_by_position(sequence_source:str, dest_sequence:str):
     """
     creates a mutation by position dictionary
     :param sequence_source: the original seq
-    :param dest_sequance: the mutated seq
+    :param dest_sequence: the mutated seq
     :return: dictionary of mutations by the position they occurred
     """
-    assert len(sequence_source) == len(dest_sequance)
-    mutations_by_position = {}
+    assert len(sequence_source) == len(dest_sequence)
+    mapping = {}
     for i in range(len(sequence_source)):
-        if sequence_source[i] != dest_sequance[i]:
-            mutations_by_position[str(i)] = (sequence_source[i], dest_sequance[i],)
-    return mutations_by_position
+        if sequence_source[i] != dest_sequence[i]:
+            mapping[str(i)] = (sequence_source[i], dest_sequence[i],)
+    return mapping
 
 
 def calc_mutate_sequence(sequence: str, num_of_mutations_to_perform: int):
@@ -106,7 +105,7 @@ def calc_mutate_sequence(sequence: str, num_of_mutations_to_perform: int):
     creates mutated sequences
     :param sequence: original sequence
     :param num_of_mutations_to_perform: amount of mutations
-    :return: the mutated seqeuence
+    :return: the mutated sequence
     """
     list_seq = list(sequence)
     positions = set()
