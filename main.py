@@ -94,6 +94,7 @@ def print_report(data):
     print to console the mutated sequence's info
     :param data: the mutated sequence's info to export
     """
+    print("ID: " + str(data["ID"]))
     print("# Of Changes Made: " + str(data["num_of_changes"]))
     print("Mutation Made: ")
     print(data["mutations_by_position"])
@@ -159,6 +160,7 @@ def run(model_path, fasta):
     for i in range(num_of_mutations):
         data = {}
         mutations_by_position = {}
+        data["ID"] = i
         data["num_of_changes"] = seq_mutation.get_num_of_mutation(seq_len_distribution)
         data["mutate_seq"] = seq_mutation.calc_mutate_sequence(sequence, data["num_of_changes"], mutations_by_position)
         data["coords"] = predict(nanonet, data["mutate_seq"])
