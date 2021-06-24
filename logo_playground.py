@@ -29,7 +29,7 @@ if __name__ == "__main__":
     width_per_col = 700
     height_per_row = 150
     fig = plt.figure()
-
+    fig.set_size_inches(14, 7.5)
     ax1 = plt.subplot2grid((num_rows, num_cols), (0, 0))
     ax2 = plt.subplot2grid((num_rows, num_cols), (1, 0))
     ax3 = plt.subplot2grid((num_rows, num_cols), (2, 0))
