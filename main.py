@@ -127,6 +127,7 @@ def present_summary_figs(results, seq_len_distribution, output_directory, sequen
     :param sequence: the original sequence
     :return:
     """
+    print("Presenting figures...")
     present_mut_dist(seq_len_distribution, output_directory)
     present_rmsd(results, output_directory)
     present_score_by_mutation_amount(results, output_directory)
@@ -282,6 +283,7 @@ def run(model_path, fasta, num_of_mutations):
     f = open('./outputs/summery.txt', 'w')
     seq_by_len = FileUtils.decompress_pickle('seq_by_len_comp.pbz2')
     seq_len_distribution = seq_mutation.calc_distribution_for_sequence(sequence, seq_by_len)
+    print("Generating mutation sequences...")
     for i in range(num_of_mutations):
         data = {}
         data["ID"] = i
@@ -297,20 +299,22 @@ def run(model_path, fasta, num_of_mutations):
         print_report(f, data)
     f.close()
     present_summary_figs(all_results, seq_len_distribution, output_directory, sequence)
+    print("Done!")
 
 
 def temp_run():
-    return run("./TrainedNanoNet", "./SolvedNbs/Nb34/Nb34.fa",100 )
+    return run("./TrainedNanoNet", "./SolvedNbs/Nb34/Nb34.fa", 1000000)
 
 if __name__ == "__main__":
     """
        receives path to a Nb fasta file and a path to a trained neural network and creates a pdb file (Ca only) according to
        the network prediction. the output file name is: "<fasta file name>_nanonet_ca.pdb"
        """
-    parser = argparse.ArgumentParser()
-    parser.add_argument("fasta", help="Nb fasta file")
-    parser.add_argument("network", help="nanonet trained model")
-    parser.add_argument("num_of_mutations", help="nanonet trained model", default=100)
-
-    args = parser.parse_args()
-    run(args.network, args.fasta, args.num_of_mutations)
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument("fasta", help="Nb fasta file")
+    # parser.add_argument("network", help="nanonet trained model")
+    # parser.add_argument("num_of_mutations", help="nanonet trained model", default=100)
+    #
+    # args = parser.parse_args()
+    # run(args.network, args.fasta, args.num_of_mutations)
+    temp_run()
