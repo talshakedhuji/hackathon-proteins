@@ -73,7 +73,7 @@ def rmsd_calc(coords1, coords2):
     sup = SVDSuperimposer()
     sup.set(coords1, coords2)
     sup.run()
-    return "{:0.3f}".format(sup.get_rms())
+    return float("{:0.3f}".format(sup.get_rms()))
 
 
 def present_rmsd(list_of_rmsds):
@@ -82,8 +82,12 @@ def present_rmsd(list_of_rmsds):
     :param list_of_rmsds: list of RMSD scores
     :return:
     """
+    plt.xlabel('mutation id')
+    plt.ylabel('RMSD')
+    plt.title('RMSD vs mutation id')
     plt.plot(list_of_rmsds)
     plt.show()
+
 
 def print_report(data):
     """
@@ -105,8 +109,29 @@ def present_positions_summary(results):
 
 
 def present_score_by_mutation_amount(results):
-    mutations_by_position = tuple(map(lambda x: x["mutations_by_position"], results))
-    mutations_by_position
+    # mutations_by_position = tuple(map(lambda x: x["mutations_by_position"], results))
+    # mutations_by_position
+
+    scores_by_lengths = {}
+    for res in results:
+        num_of_mutation = res["num_of_changes"]
+        if num_of_mutation in scores_by_lengths:
+            scores_by_lengths[num_of_mutation].append(res["rmsd"])
+        else:
+            scores_by_lengths[num_of_mutation] = [res["rmsd"]]
+
+    means = []
+    lengths = []
+    for key in scores_by_lengths:
+        means.append(sum(scores_by_lengths[key])/len(scores_by_lengths[key]))
+        lengths.append(key)
+
+    plt.xlabel('mutations amount')
+    plt.ylabel('mean RMSD')
+    plt.title('mean RMSD by mutations amount')
+    plt.bar(lengths, means)
+    plt.show()
+
 
 def run(model_path, fasta):
 
@@ -129,7 +154,7 @@ def run(model_path, fasta):
         matrix_to_pdb(ca_file, sequence, ca_coords)
     all_results = []
     seq_by_len = FileUtils.decompress_pickle('seq_by_len_comp.pbz2')
-    num_of_mutations = 5
+    num_of_mutations = 40
     seq_len_distribution = seq_mutation.calc_distribution_for_sequance(sequence, seq_by_len) 
     for i in range(num_of_mutations):
         data = {}
