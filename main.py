@@ -4,6 +4,8 @@ import pandas as pd
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
+from tqdm import tqdm
+
 import HackatonUtils as utils
 import seq_mutation
 from Bio.PDB import Polypeptide
@@ -84,8 +86,8 @@ def present_rmsd(results, output_directory):
     rmsds = tuple(map(lambda x: x["rmsd"], results))
     ids = tuple(map(lambda x: x["ID"], results))
     plt.plot(ids, rmsds)
-    plt.show()
     plt.savefig(output_directory + '/rmsd_by_id.png')
+    plt.show()
 
 
 def present_mut_dist(distribution, output_directory):
@@ -98,8 +100,9 @@ def present_mut_dist(distribution, output_directory):
     plt.ylabel('# of Mutations')
     plt.title('# of Mutations vs Position ID')
     plt.plot(tuple(distribution))
-    plt.show()
     plt.savefig(output_directory + '/mutations distributions.png')
+    plt.show()
+
 
 
 def print_report(file, data):
@@ -207,8 +210,8 @@ def present_logo(results, sequence, output_directory, prefix):
                    color_scheme='NajafabadiEtAl2017',
                    show_spines=False)
 
-    plt.show()
     plt.savefig(output_directory + '/' + prefix + '_freq.png')
+    plt.show()
 
 def present_score_by_mutation_amount(results, output_directory):
     """
@@ -235,8 +238,8 @@ def present_score_by_mutation_amount(results, output_directory):
     plt.ylabel('mean RMSD')
     plt.title('mean RMSD by mutations amount')
     plt.bar(lengths, means)
-    plt.show()
     plt.savefig(output_directory + '/mean_rmsd_by_amount.png')
+    plt.show()
 
 def clear_ouput_directory(path):
     """
@@ -283,8 +286,7 @@ def run(model_path, fasta, num_of_mutations):
     f = open('./outputs/summery.txt', 'w')
     seq_by_len = FileUtils.decompress_pickle('seq_by_len_comp.pbz2')
     seq_len_distribution = seq_mutation.calc_distribution_for_sequence(sequence, seq_by_len)
-    print("Generating mutation sequences...")
-    for i in range(num_of_mutations):
+    for i in tqdm(range(0, num_of_mutations), desc=f'Generating mutation sequences...'):
         data = {}
         data["ID"] = i
         data["num_of_changes"] = seq_mutation.get_num_of_mutation(seq_len_distribution)
@@ -293,8 +295,8 @@ def run(model_path, fasta, num_of_mutations):
         data["file_name"] = ca_mutated_file_name.format(i)
         data["rmsd"] = rmsd_calc(ca_coords, data["coords"])
         data["mutations_by_position"] = seq_mutation.mutations_by_position(sequence, data["mutate_seq"])
-        with open(data["file_name"], "w") as ca_mutate_file:
-            matrix_to_pdb(ca_mutate_file, data["mutate_seq"], data["coords"])
+        # with open(data["file_name"], "w") as ca_mutate_file:
+        #     matrix_to_pdb(ca_mutate_file, data["mutate_seq"], data["coords"])
         all_results.append(data)
         print_report(f, data)
     f.close()
@@ -303,17 +305,18 @@ def run(model_path, fasta, num_of_mutations):
 
 
 def temp_run():
-    return run("./TrainedNanoNet", "./SolvedNbs/Nb34/Nb34.fa", 1000000)
+    return run("./TrainedNanoNet", "./SolvedNbs/Nb34/Nb34.fa", 100)
 
 if __name__ == "__main__":
     """
        receives path to a Nb fasta file and a path to a trained neural network and creates a pdb file (Ca only) according to
        the network prediction. the output file name is: "<fasta file name>_nanonet_ca.pdb"
        """
-    parser = argparse.ArgumentParser()
-    parser.add_argument("fasta", help="Nb fasta file")
-    parser.add_argument("network", help="nanonet trained model")
-    parser.add_argument("num_of_mutations", help="nanonet trained model", default=100)
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument("fasta", help="Nb fasta file")
+    # parser.add_argument("network", help="nanonet trained model")
+    # parser.add_argument("num_of_mutations", help="nanonet trained model", default=100)
 
-    args = parser.parse_args()
-    run(args.network, args.fasta, args.num_of_mutations)
+    # args = parser.parse_args()
+    # run(args.network, args.fasta, args.num_of_mutations)
+    temp_run()
