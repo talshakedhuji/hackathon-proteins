@@ -1,21 +1,15 @@
 import os
 import time
-from time import sleep
-
 import pymolPy3
 import platform
 import subprocess
-
 
 def create_pdb_img(ref_pdb_path, target_pdb_path_list, out_path_dir):
     if platform.system() == 'Linux':
         try:
             # Run command install
             try:
-                test = subprocess.Popen(["module load bioinfo",
-                                         "module load pymol"], stdout=subprocess.PIPE)
-                output = test.communicate()[0]
-                print(f'cmd command output: {output}')
+                run_bash_script()
             except Exception as e:
                 print(f'Failed running commands, trying pymol anyway :) {e}')
 
@@ -62,3 +56,35 @@ def create_pdb_img(ref_pdb_path, target_pdb_path_list, out_path_dir):
 
     else:
         print("Only work with Linux, sorry :/")
+
+
+
+def run_bash_script():
+    # Activate venv
+    process = subprocess.Popen(['activate', 'virtual', 'env'],
+                               stdout=subprocess.PIPE,
+                               universal_newlines=True)
+    stdout, stderr = process.communicate()
+    print(stdout, stderr)
+    # install and load bioinfo
+    process = subprocess.Popen(['pip', 'install', 'bioinfo'],
+                               stdout=subprocess.PIPE,
+                               universal_newlines=True)
+    stdout, stderr = process.communicate()
+    print(stdout, stderr)
+    process = subprocess.Popen(['module', 'load', 'bioinfo'],
+                               stdout=subprocess.PIPE,
+                               universal_newlines=True)
+    stdout, stderr = process.communicate()
+    print(stdout, stderr)
+    # install and load pymol
+    process = subprocess.Popen(['pip', 'install', 'pymol'],
+                               stdout=subprocess.PIPE,
+                               universal_newlines=True)
+    stdout, stderr = process.communicate()
+    print(stdout, stderr)
+    process = subprocess.Popen(['module', 'load', 'pymol'],
+                               stdout=subprocess.PIPE,
+                               universal_newlines=True)
+    stdout, stderr = process.communicate()
+    print(stdout, stderr)
