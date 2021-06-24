@@ -140,7 +140,8 @@ def present_logo(results, sequence, output_directory, prefix):
         seq = res["mutate_seq"]
         for i in range(len(seq)):
             aa = seq[i]
-            counts_map[aa][i] += 1
+            if aa != sequence[i]:
+                counts_map[aa][i] += 1
 
     amount = float(len(results))
     for aa in counts_map:
