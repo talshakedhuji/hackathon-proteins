@@ -24,8 +24,7 @@ HEADER = "HEADER    IMMUNE SYSTEM - NANOBODY                           \nTITLE  
 ATOM_LINE = "ATOM{}{}  CA  {} H{}{}{}{:.3f}{}{:.3f}{}{:.3f}  1.00 0.00           C\n"
 END_LINE = "END"
 
-AA_NAMES = ["A", "C", "D", "E", "F", "G", "H", "I", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "W", "Y", "V", "-",
-            "X"]
+AA_NAMES = ["A", "C", "D", "E", "F", "G", "H", "I", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "W", "Y", "V"]
 # def create_pdb_from_seq(model, sequence, file_path):
 #     net_input = utils.generate_input("", False);
 #     predict_dist, _, _, _ = model.predict(np.asarray([net_input]))
@@ -128,13 +127,12 @@ def present_AA_composition(results, output_directory, sequence):
             bad.append(result)
         else:
             good.append(result)
-    good_title = "Good AA freq."
-    bad_title = "Bad AA freq."
-    present_logo(good, sequence, good_title)
-    present_logo(bad, sequence, bad_title)
+
+    present_logo(good, sequence, output_directory, "Good")
+    present_logo(bad, sequence, output_directory, "Bad")
 
 
-def present_logo(results, sequence, title):
+def present_logo(results, sequence, output_directory, prefix):
     counts_map = {}
     for aa in AA_NAMES:
         counts_map[aa] = np.zeros(len(sequence))
@@ -165,17 +163,20 @@ def present_logo(results, sequence, title):
 
     logomaker.Logo(df[0:math.floor(size)],
                    ax=ax1,
+                   color_scheme='NajafabadiEtAl2017',
                    show_spines=False)
     logomaker.Logo(df[math.floor(size):math.floor(2*size)],
                    ax=ax2,
+                   color_scheme='NajafabadiEtAl2017',
                    show_spines=False)
     logomaker.Logo(df[math.floor(2*size):],
                    ax=ax3,
+                   color_scheme='NajafabadiEtAl2017',
                    show_spines=False)
-    fig.suptitle(title, fontsize=16)
+    fig.suptitle(prefix + ' AA freq.', fontsize=16)
 
     plt.show()
-
+    plt.savefig(output_directory + '/' + prefix + '_freq.png')
 
 def present_score_by_mutation_amount(results, output_directory):
     # mutations_by_position = tuple(map(lambda x: x["mutations_by_position"], results))
@@ -262,10 +263,10 @@ if __name__ == "__main__":
        receives path to a Nb fasta file and a path to a trained neural network and creates a pdb file (Ca only) according to
        the network prediction. the output file name is: "<fasta file name>_nanonet_ca.pdb"
        """
-    parser = argparse.ArgumentParser()
-    parser.add_argument("fasta", help="Nb fasta file")
-    parser.add_argument("network", help="nanonet trained model")
-
-    args = parser.parse_args()
-    run(args.network, args.fasta)
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument("fasta", help="Nb fasta file")
+    # parser.add_argument("network", help="nanonet trained model")
+    #
+    # args = parser.parse_args()
+    # run(args.network, args.fasta)
     temp_run()
