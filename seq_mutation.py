@@ -66,6 +66,8 @@ def get_num_of_mutation(distribuation):
     """
     return random.choices(numpy.array(range(len(distribuation)))+1, k=1, weights=distribuation)[0]
 
+def get_random_letter():
+    return random.choices(list(AMINO_ACID_DIST.keys()), list(AMINO_ACID_DIST.values()))[0]
 
 def calc_mutate_sequence(sequence: str, num_of_mutations_to_perform: int, mutations_by_position):
     list_seq = list(sequence)
@@ -74,9 +76,9 @@ def calc_mutate_sequence(sequence: str, num_of_mutations_to_perform: int, mutati
         [left_cdr, right_cdr] = rand_cdr_method(sequence=sequence)
         rand_position = random.randrange(left_cdr, right_cdr)
         original_aa = list_seq[rand_position]
-        mutation_aa = random.choices(list(AMINO_ACID_DIST.keys()), list(AMINO_ACID_DIST.values()))[0]
+        mutation_aa = get_random_letter()
         while original_aa == mutation_aa:
-            random.choices(list(AMINO_ACID_DIST.keys()), list(AMINO_ACID_DIST.values()))[0]
+            mutation_aa = get_random_letter()
         list_seq[rand_position] = mutation_aa
         if str(rand_position) in mutations_by_position:
             mutations_by_position[str(rand_position)].append(mutation_aa)
