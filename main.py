@@ -96,6 +96,7 @@ def present_rmsd(results, output_directory):
     plt.show()
     plt.savefig(output_directory + '/rmsd_by_id.png')
 
+
 def present_mut_dist(distribution, output_directory):
     """
     plots the mutations distribution
@@ -127,6 +128,14 @@ def print_report(file, data):
 
 
 def present_summary_figs(results, seq_len_distribution, output_directory, sequence):
+    """
+    prints the summary figures for the current run
+    :param results: results of the run
+    :param seq_len_distribution: distribution of AA
+    :param output_directory: the path to save the figs
+    :param sequence: the original sequence
+    :return:
+    """
     present_mut_dist(seq_len_distribution, output_directory)
     present_rmsd(results, output_directory)
     present_score_by_mutation_amount(results, output_directory)
@@ -134,6 +143,13 @@ def present_summary_figs(results, seq_len_distribution, output_directory, sequen
 
 
 def present_AA_composition(results, output_directory, sequence):
+    """
+    present the logo figures for the "good" and "bad" sequences (by rmsd score)
+    :param results: the results of the run
+    :param output_directory: path to save figs
+    :param sequence: the original sequence
+    :return:
+    """
     scores = (map(lambda x: x["rmsd"], results))
     median_score = statistics.median(scores)
     good = []
@@ -149,6 +165,14 @@ def present_AA_composition(results, output_directory, sequence):
 
 
 def present_logo(results, sequence, output_directory, prefix):
+    """
+    present the logo for the frequency of AA mutations
+    :param results: the results of the run
+    :param sequence: original sequence
+    :param output_directory: path to save figs
+    :param prefix: prefix for the figure name
+    :return:
+    """
     counts_map = {}
     for aa in AA_NAMES:
         counts_map[aa] = np.zeros(len(sequence))
@@ -195,6 +219,12 @@ def present_logo(results, sequence, output_directory, prefix):
     plt.savefig(output_directory + '/' + prefix + '_freq.png')
 
 def present_score_by_mutation_amount(results, output_directory):
+    """
+    present bar plot of mean rmsd vs mutation amount
+    :param results: results of the run
+    :param output_directory: path to save the figure
+    :return:
+    """
     # mutations_by_position = tuple(map(lambda x: x["mutations_by_position"], results))
     # mutations_by_position
 
@@ -220,6 +250,11 @@ def present_score_by_mutation_amount(results, output_directory):
     plt.savefig(output_directory + '/mean_rmsd_by_amount.png')
 
 def clear_ouput_directory(path):
+    """
+    clear the output dir
+    :param path: path to be cleaned
+    :return:
+    """
     try:
         files = glob.glob(path + "/*")
         for f in files:
@@ -229,7 +264,12 @@ def clear_ouput_directory(path):
 
 
 def run(model_path, fasta):
-
+    """
+    runs the mutation generation
+    :param model_path: path to nanonet model
+    :param fasta: file of the sequence to be mutated
+    :return:
+    """
     nanonet = tf.keras.models.load_model(model_path)
     # nanobody sequence
     file_name = "./SolvedNbs/Nb34/Nb34.fa"
