@@ -8,12 +8,7 @@ import HackatonUtils as utils
 import seq_mutation
 from Bio.PDB import Polypeptide
 from Bio.SVDSuperimposer import SVDSuperimposer
-import subprocess
-import random
-from tensorflow.keras import layers
-import pickle
 import argparse
-import matplotlib
 import FileUtils
 import os
 import statistics
@@ -25,10 +20,6 @@ ATOM_LINE = "ATOM{}{}  CA  {} H{}{}{}{:.3f}{}{:.3f}{}{:.3f}  1.00 0.00          
 END_LINE = "END"
 
 AA_NAMES = ["A", "C", "D", "E", "F", "G", "H", "I", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "W", "Y", "V"]
-# def create_pdb_from_seq(model, sequence, file_path):
-#     net_input = utils.generate_input("", False);
-#     predict_dist, _, _, _ = model.predict(np.asarray([net_input]))
-#     return predict_dist
 
 
 def matrix_to_pdb(pdb_file, seq, coord_matrix):
@@ -225,9 +216,6 @@ def present_score_by_mutation_amount(results, output_directory):
     :param output_directory: path to save the figure
     :return:
     """
-    # mutations_by_position = tuple(map(lambda x: x["mutations_by_position"], results))
-    # mutations_by_position
-
     scores_by_lengths = {}
     for res in results:
         num_of_mutation = res["num_of_changes"]
@@ -263,13 +251,13 @@ def clear_ouput_directory(path):
         raise SystemExit('Error: could not delete the content of the output directory')
 
 
-def run(model_path, fasta):
+def run(model_path, fasta, num_of_mutations):
     """
-    runs the mutation generation
-    :param model_path: path to nanonet model
-    :param fasta: file of the sequence to be mutated
-    :return:
-    """
+       runs the mutation generation
+       :param model_path: path to nanonet model
+       :param fasta: file of the sequence to be mutated
+       :return:
+       """
     nanonet = tf.keras.models.load_model(model_path)
     # nanobody sequence
     file_name = "./SolvedNbs/Nb34/Nb34.fa"
@@ -293,7 +281,6 @@ def run(model_path, fasta):
     all_results = []
     f = open('./outputs/summery.txt', 'w')
     seq_by_len = FileUtils.decompress_pickle('seq_by_len_comp.pbz2')
-    num_of_mutations = 1000000
     seq_len_distribution = seq_mutation.calc_distribution_for_sequence(sequence, seq_by_len)
     for i in range(num_of_mutations):
         data = {}
@@ -312,19 +299,18 @@ def run(model_path, fasta):
     present_summary_figs(all_results, seq_len_distribution, output_directory, sequence)
 
 
-def temp_run(): #TODO(rachel): Change to main
-    return run("./TrainedNanoNet", "./SolvedNbs/Nb34/Nb34.fa", )
-
+def temp_run():
+    return run("./TrainedNanoNet", "./SolvedNbs/Nb34/Nb34.fa",100 )
 
 if __name__ == "__main__":
     """
        receives path to a Nb fasta file and a path to a trained neural network and creates a pdb file (Ca only) according to
        the network prediction. the output file name is: "<fasta file name>_nanonet_ca.pdb"
        """
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument("fasta", help="Nb fasta file")
-    # parser.add_argument("network", help="nanonet trained model")
-    #
-    # args = parser.parse_args()
-    # run(args.network, args.fasta)
-    temp_run()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("fasta", help="Nb fasta file")
+    parser.add_argument("network", help="nanonet trained model")
+    parser.add_argument("num_of_mutations", help="nanonet trained model", default=100)
+
+    args = parser.parse_args()
+    run(args.network, args.fasta, args.num_of_mutations)

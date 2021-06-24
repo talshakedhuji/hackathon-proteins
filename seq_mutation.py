@@ -39,16 +39,10 @@ def get_num_of_diffs(seq1, seq2):
     return sum(1 for a, b in zip(seq1, seq2) if a != b)
 
 
-def calc_distribution_for_sequence(sequence, len_to_seq):
-    """
-    Documented in the scientific reports
-    :param sequence: original sequence
-    :param len_to_seq: seqeunces by length map
-    :return: the distribution
-    """
-    MAX_CHANGES = len(sequence)
-    x = [0] * MAX_CHANGES
-    for record in len_to_seq[str(len(sequence))]:
+def calc_distribution_for_sequence(sequence, len_to_seq_data):
+    max_changes = len(sequence)
+    x = [0] * max_changes
+    for record in len_to_seq_data[str(len(sequence))]:
         diffs = 0
         for cdr_method in CDR_METHODS:
             [ind1, ind2] = cdr_method(sequence)
@@ -58,7 +52,7 @@ def calc_distribution_for_sequence(sequence, len_to_seq):
             alignments = pairwise2.align.globalxx(sub_seq, sub_seq_record)
 
             diffs += int(abs(len(sub_seq) - alignments[0].score))
-        if diffs > MAX_CHANGES or diffs == 0:
+        if diffs > max_changes or diffs == 0:
             continue
         x[diffs - 1] += 1
     print("Distribution of mutation was calculated successfully")
@@ -76,11 +70,10 @@ def get_random_letter():
     return a random AA letter
     :return: aa character
     """
-    # return random.choice(tuple(AMINO_ACID_DIST.keys()))
     return random.choices(list(AMINO_ACID_DIST.keys()), list(AMINO_ACID_DIST.values()))[0]
 
 
-def get_random_position(sequence, positions):
+def _get_random_position(sequence):
     """
     returns a position that havn't been picked yet
     :param sequence: given sequence
@@ -89,12 +82,9 @@ def get_random_position(sequence, positions):
     """
     rand_cdr_method = random.choice(CDR_METHODS)
     [left_cdr, right_cdr] = rand_cdr_method(sequence=sequence)
-    rand_position = random.randrange(left_cdr, right_cdr)
-    while rand_position in positions:
-        rand_cdr_method = random.choice(CDR_METHODS)
-        [left_cdr, right_cdr] = rand_cdr_method(sequence=sequence)
-        rand_position = random.randrange(left_cdr, right_cdr)
+    rand_position = random.randrange(left_cdr, right_cdr+1)
     return rand_position
+
 
 def mutations_by_position(sequence_source:str, dest_sequance:str):
     """
@@ -121,7 +111,7 @@ def calc_mutate_sequence(sequence: str, num_of_mutations_to_perform: int):
     list_seq = list(sequence)
     positions = set()
     while len(positions) != num_of_mutations_to_perform:
-        rand_position = get_random_position(sequence, positions)
+        rand_position = _get_random_position(sequence)
         positions.add(rand_position)
         original_aa = list_seq[rand_position]
         mutation_aa = get_random_letter()
