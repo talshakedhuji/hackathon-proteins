@@ -117,7 +117,6 @@ def print_report(file, data):
     file.write("Mutation Made: " + "\n")
     file.write(str(data["mutations_by_position"]) + "\n")
     file.write("Mutated Sequence: " + str(data["mutate_seq"]) + "\n")
-    file.write("Output File Name: " + str(data["file_name"]) + "\n")
     file.write("RMSD: " + str(data["rmsd"]) + "\n")
     file.write("\n")
 
