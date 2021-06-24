@@ -4,6 +4,8 @@ import pandas as pd
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
+from tqdm import tqdm
+
 import HackatonUtils as utils
 import seq_mutation
 from Bio.PDB import Polypeptide
@@ -284,8 +286,7 @@ def run(model_path, fasta, num_of_mutations):
     f = open('./outputs/summery.txt', 'w')
     seq_by_len = FileUtils.decompress_pickle('seq_by_len_comp.pbz2')
     seq_len_distribution = seq_mutation.calc_distribution_for_sequence(sequence, seq_by_len)
-    print("Generating mutation sequences...")
-    for i in range(num_of_mutations):
+    for i in tqdm(range(0, num_of_mutations), desc=f'Generating mutation sequences...'):
         data = {}
         data["ID"] = i
         data["num_of_changes"] = seq_mutation.get_num_of_mutation(seq_len_distribution)
@@ -304,7 +305,7 @@ def run(model_path, fasta, num_of_mutations):
 
 
 def temp_run():
-    return run("./TrainedNanoNet", "./SolvedNbs/Nb34/Nb34.fa", 100000)
+    return run("./TrainedNanoNet", "./SolvedNbs/Nb34/Nb34.fa", 100)
 
 if __name__ == "__main__":
     """

@@ -4,4 +4,5 @@ bio~=0.5.0
 matplotlib~=3.4.2
 pymolPy3~=0.1.2
 logomaker~=0.8
-pandas
+pandas~=1.2.5
+tqdm~=4.61.1
