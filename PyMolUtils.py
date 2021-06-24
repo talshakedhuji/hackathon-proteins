@@ -4,7 +4,7 @@ import platform
 import subprocess
 
 def create_pdb_img(ref_pdb_path, target_pdb_path, out_path_dir):
-    if platform.system() != 'Linux':
+    if platform.system() == 'Linux':
         try:
             # Run command install
             try:
@@ -54,3 +54,16 @@ def create_pdb_img(ref_pdb_path, target_pdb_path, out_path_dir):
 
     else:
         print("Only work with Linux, sorry :/")
+
+def test():
+    output_directory = "./outputs"
+    file1 = output_directory + "/original.pdb"
+    file2 = output_directory + "/mutated_1.pdb"
+    create_pdb_img(file1, file2, output_directory)
+
+if __name__ == "__main__":
+    output_directory = "./outputs"
+    file1 = output_directory + "/original.pdb"
+    file2 = output_directory + "/mutated_1.pdb"
+    create_pdb_img(file1, file2, output_directory)
+    create_pdb_img(file1, file2, output_directory)
