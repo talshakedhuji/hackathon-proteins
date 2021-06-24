@@ -255,8 +255,8 @@ def run(model_path, fasta):
     all_results = []
     f = open('./outputs/summery.txt', 'w')
     seq_by_len = FileUtils.decompress_pickle('seq_by_len_comp.pbz2')
-    num_of_mutations = 10000
-    seq_len_distribution = seq_mutation.calc_distribution_for_sequance(sequence, seq_by_len)
+    num_of_mutations = 1000000
+    seq_len_distribution = seq_mutation.calc_distribution_for_sequence(sequence, seq_by_len)
     for i in range(num_of_mutations):
         data = {}
         data["ID"] = i
@@ -276,6 +276,7 @@ def run(model_path, fasta):
 
 def temp_run(): #TODO(rachel): Change to main
     return run("./TrainedNanoNet", "./SolvedNbs/Nb34/Nb34.fa", )
+
 
 if __name__ == "__main__":
     """

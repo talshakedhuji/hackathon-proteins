@@ -37,8 +37,15 @@ def get_num_of_diffs(seq1, seq2):
        :return: number of mutation btw the two sequences
        """
     return sum(1 for a, b in zip(seq1, seq2) if a != b)
-#MAX_CHANGES = 5
-def calc_distribution_for_sequance(sequence, len_to_seq):
+
+
+def calc_distribution_for_sequence(sequence, len_to_seq):
+    """
+
+    :param sequence:
+    :param len_to_seq:
+    :return:
+    """
     MAX_CHANGES = len(sequence)
     x = [0] * MAX_CHANGES
     for record in len_to_seq[str(len(sequence))]:
@@ -65,11 +72,21 @@ def get_num_of_mutation(distribution):
     return random.choices(numpy.array(range(len(distribution)))+1, k=1, weights=distribution)[0]
 
 def get_random_letter():
+    """
+    return a random AA letter
+    :return: aa character
+    """
     # return random.choice(tuple(AMINO_ACID_DIST.keys()))
     return random.choices(list(AMINO_ACID_DIST.keys()), list(AMINO_ACID_DIST.values()))[0]
 
 
 def get_random_position(sequence, positions):
+    """
+    returns a position that havn't been picked yet
+    :param sequence: given sequence
+    :param positions: list of "unavailable" posiitons
+    :return: a random position under the constraints of unique position for each mutation
+    """
     rand_cdr_method = random.choice(CDR_METHODS)
     [left_cdr, right_cdr] = rand_cdr_method(sequence=sequence)
     rand_position = random.randrange(left_cdr, right_cdr)
@@ -80,6 +97,12 @@ def get_random_position(sequence, positions):
     return rand_position
 
 def mutations_by_position(sequence_source:str, dest_sequance:str):
+    """
+    creates a mutation by position dictionary
+    :param sequence_source: the original seq
+    :param dest_sequance: the mutated seq
+    :return: dictionary of mutations by the position they occurred
+    """
     assert len(sequence_source) == len(dest_sequance)
     mutations_by_position = {}
     for i in range(len(sequence_source)):
