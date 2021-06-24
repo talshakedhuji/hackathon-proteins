@@ -1,6 +1,7 @@
 import random
 import numpy
 import cdr_annotation
+from Bio import pairwise2
 # http://www.tiem.utk.edu/~gross/bioed/webmodules/aminoacid.htm
 # Distribution of AA in Human body
 AMINO_ACID_DIST = {
@@ -29,7 +30,8 @@ AMINO_ACID_DIST = {
 
 
 CDR_METHODS = [cdr_annotation.find_cdr1, cdr_annotation.find_cdr2, cdr_annotation.find_cdr3]
-from Bio import pairwise2
+
+
 def get_num_of_diffs(seq1, seq2):
     """
        :param seq1: first sequence
@@ -57,6 +59,7 @@ def calc_distribution_for_sequence(sequence, len_to_seq_data):
         x[diffs - 1] += 1
     print("Distribution of mutation was calculated successfully")
     return x
+
 
 def get_num_of_mutation(distribution):
     """ Get num of mutation
