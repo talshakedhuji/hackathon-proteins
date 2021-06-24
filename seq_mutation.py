@@ -81,12 +81,12 @@ def get_random_position(sequence, positions):
         rand_position = random.randrange(left_cdr, right_cdr)
     return rand_position
 
-def mutations_by_position(sequence_source:str, dest_source:str):
-    assert len(sequence_source) == len(dest_source)
+def mutations_by_position(sequence_source:str, dest_sequance:str):
+    assert len(sequence_source) == len(dest_sequance)
     mutations_by_position = {}
     for i in range(len(sequence_source)):
-        if sequence_source[i] != dest_source[i]:
-            mutations_by_position[str(i)] = dest_source[i]
+        if sequence_source[i] != dest_sequance[i]:
+            mutations_by_position[str(i)] = (sequence_source[i], dest_sequance[i],)
     return mutations_by_position
 
 
