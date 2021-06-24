@@ -165,29 +165,23 @@ def run(model_path, fasta):
     with open(ca_file_name, "w") as ca_file:
         matrix_to_pdb(ca_file, sequence, ca_coords)
     all_results = []
-    seq_by_len = FileUtils.decompress_pickle('seq_by_len_comp.pbz2')
-    num_of_mutations = 40
-    seq_len_distribution = seq_mutation.calc_distribution_for_sequance(sequence, seq_by_len)
-
     f = open('./outputs/summery.txt', 'w')
-
+    seq_by_len = FileUtils.decompress_pickle('seq_by_len_comp.pbz2')
     num_of_mutations = 100
     seq_len_distribution = seq_mutation.calc_distribution_for_sequance(sequence, seq_by_len)
     for i in range(num_of_mutations):
         data = {}
-        mutations_by_position = {}
         data["ID"] = i + 1
         data["num_of_changes"] = seq_mutation.get_num_of_mutation(seq_len_distribution)
-        data["mutate_seq"] = seq_mutation.calc_mutate_sequence(sequence, data["num_of_changes"], mutations_by_position)
+        data["mutate_seq"] = seq_mutation.calc_mutate_sequence(sequence, data["num_of_changes"])
         data["coords"] = predict(nanonet, data["mutate_seq"])
         data["file_name"] = ca_mutated_file_name.format(i)
         data["rmsd"] = rmsd_calc(ca_coords, data["coords"])
-        data["mutations_by_position"] = mutations_by_position
+        data["mutations_by_position"] = seq_mutation.mutations_by_position(sequence, data["mutate_seq"])
         with open(data["file_name"], "w") as ca_mutate_file:
             matrix_to_pdb(ca_mutate_file, data["mutate_seq"], data["coords"])
         all_results.append(data)
         print_report(f, data)
-
     f.close()
     present_rmsd(tuple(map(lambda x: x["rmsd"], all_results)), output_directory)
     present_positions_summary(all_results, output_directory)
