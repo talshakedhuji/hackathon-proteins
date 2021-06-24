@@ -86,6 +86,10 @@ def present_rmsd(list_of_rmsds):
     plt.show()
 
 def print_report(data):
+    """
+    print to console the mutated sequence's info
+    :param data: the mutated sequence's info to export
+    """
     print("# Of Changes Made: " + str(data["num_of_changes"]))
     print("Mutation Made: ")
     print(data["mutations_by_position"])
