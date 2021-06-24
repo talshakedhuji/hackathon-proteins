@@ -112,7 +112,7 @@ def run(model_path, fasta):
         data = {}
         mutations_by_position = {}
         data["num_of_changes"] =1# seq_mutation.get_num_of_mutation(len(sequence))
-        data["mutate_seq"] = seq_mutation.calc_mutate_sequence(sequence, data["num_of_changes"], mutations_by_position)
+        data["mutate_seq"] = seq_mutation.calc_mutate_sequence(sequence, data["num_of_changes"], mutations_by_position) #test
         data["coords"] = predict(nanonet, data["mutate_seq"])
         data["file_name"] = ca_mutated_file_name.format(i)
         data["rmsd"] = rmsd_calc(ca_coords, data["coords"])
