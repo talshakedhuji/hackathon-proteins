@@ -54,17 +54,15 @@ def calc_distribution_for_sequance(sequence, len_to_seq):
         if diffs > MAX_CHANGES or diffs == 0:
             continue
         x[diffs - 1] += 1
-    print(x)
+    print("Distribution of mutation was calculated successfully")
     return x
 
-
-def get_num_of_mutation(distribuation):
-    """
-    :param sequence: String of given seq
-    :param data: list of sequences from the DB with same length
+def get_num_of_mutation(distribution):
+    """ Get num of mutation
+    :param distribution: the mutation distribution
     :return: number of mutation to apply on given sequence
     """
-    return random.choices(numpy.array(range(len(distribuation)))+1, k=1, weights=distribuation)[0]
+    return random.choices(numpy.array(range(len(distribution)))+1, k=1, weights=distribution)[0]
 
 def get_random_letter():
     # return random.choice(tuple(AMINO_ACID_DIST.keys()))

@@ -81,16 +81,33 @@ def rmsd_calc(coords1, coords2):
     return float("{:0.3f}".format(sup.get_rms()))
 
 
-def present_rmsd(list_of_rmsds, output_directory):
+def present_rmsd(results, output_directory):
     """
     plots the RMSDs of the different sequences
-    :param list_of_rmsds: list of RMSD scores
+    :param results: list of RMSD scores
     :return:
     """
     plt.xlabel('mutation id')
     plt.ylabel('RMSD')
     plt.title('RMSD vs mutation id')
-    plt.plot(list_of_rmsds)
+    rmsds = tuple(map(lambda x: x["rmsd"], results))
+    ids = tuple(map(lambda x: x["ID"], results))
+    plt.plot(ids, rmsds)
+    plt.show()
+    plt.savefig(output_directory + '/rmsd_by_id.png')
+
+def present_mut_dist(distribution, output_directory):
+    """
+    plots the mutations distribution
+    :param distribution: the data to plot
+    :param output_directory: the output directory
+    """
+    plt.xlabel('Position Index')
+    plt.ylabel('Mutations Counter')
+    plt.title('RMSD vs mutation id')
+    rmsds = tuple(map(lambda x: x["rmsd"], results))
+    ids = tuple(map(lambda x: x["ID"], results))
+    plt.plot(ids, rmsds)
     plt.show()
     plt.savefig(output_directory + '/rmsd_by_id.png')
 
@@ -111,8 +128,9 @@ def print_report(file, data):
     file.write("\n")
 
 
-def present_summary_figs(results, output_directory, sequence):
-    present_rmsd(tuple(map(lambda x: x["rmsd"], results)), output_directory)
+def present_summary_figs(results, seq_len_distribution, output_directory, sequence):
+    present_mut_dist(seq_len_distribution, output_directory)
+    present_rmsd(results, output_directory)
     present_score_by_mutation_amount(results, output_directory)
     present_AA_composition(results, output_directory, sequence)
 
@@ -229,18 +247,19 @@ def run(model_path, fasta):
     # ca coordinates
     ca_coords = predict(nanonet, sequence)
     # create ca pdb file
-    ca_file_name = "./outputs/{}_nanonet_ca.pdb".format(file_name.split(".")[0])
     ca_mutated_file_name = "./outputs/mutated_{}.pdb"
-    with open(ca_file_name, "w") as ca_file:
+    original_file_name = "./outputs/original.pdb".format(file_name.split(".")[0])
+    with open(original_file_name, "w") as ca_file:
         matrix_to_pdb(ca_file, sequence, ca_coords)
+    print("PDB of original sequence was created successfully, file name: original.pdb")
     all_results = []
     f = open('./outputs/summery.txt', 'w')
     seq_by_len = FileUtils.decompress_pickle('seq_by_len_comp.pbz2')
     num_of_mutations = 500
-    seq_len_distribution = seq_mutation.calc_distribution_for_sequance(sequence, seq_by_len)
+    seq_len_distribution = seq_mutation.calc_distribution_for_sequance(sequence, seq_by_len, output_directory)
     for i in range(num_of_mutations):
         data = {}
-        data["ID"] = i + 1
+        data["ID"] = i
         data["num_of_changes"] = seq_mutation.get_num_of_mutation(seq_len_distribution)
         data["mutate_seq"] = seq_mutation.calc_mutate_sequence(sequence, data["num_of_changes"])
         data["coords"] = predict(nanonet, data["mutate_seq"])
@@ -252,7 +271,7 @@ def run(model_path, fasta):
         all_results.append(data)
         print_report(f, data)
     f.close()
-    present_summary_figs(all_results, output_directory, sequence)
+    present_summary_figs(all_results, seq_len_distribution, output_directory, sequence)
 
 
 def temp_run(): #TODO(rachel): Change to main
