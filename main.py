@@ -90,21 +90,6 @@ def present_rmsd(list_of_rmsds, output_directory):
     plt.savefig(output_directory + '/rmsd_by_id.png')
 
 
-def print_report(data):
-    """
-    print to console the mutated sequence's info
-    :param data: the mutated sequence's info to export
-    """
-    print("# Of Changes Made: " + str(data["num_of_changes"]))
-    print("Mutation Made: ")
-    print(data["mutations_by_position"])
-    print("Mutated Sequence: " + str(data["mutate_seq"]))
-    print("Output File Name: " + str(data["file_name"]))
-    print("RMSD: " + str(data["rmsd"]))
-    print(u'\u2500' * 100)
-
-
-
 def present_positions_summary(results, output_directory):
     present_score_by_mutation_amount(results, output_directory)
 
@@ -135,6 +120,20 @@ def present_score_by_mutation_amount(results, output_directory):
     plt.savefig(output_directory + '/mean_rmsd_by_amount.png')
 
 
+def print_report(data):
+    """
+    print to console the mutated sequence's info
+    :param data: the mutated sequence's info to export
+    """
+    print("# Of Changes Made: " + str(data["num_of_changes"]))
+    print("Mutation Made: ")
+    print(data["mutations_by_position"])
+    print("Mutated Sequence: " + str(data["mutate_seq"]))
+    print("Output File Name: " + str(data["file_name"]))
+    print("RMSD: " + str(data["rmsd"]))
+    print(u'\u2500' * 100)
+
+
 def run(model_path, fasta):
 
     nanonet = tf.keras.models.load_model(model_path)
@@ -156,7 +155,7 @@ def run(model_path, fasta):
         matrix_to_pdb(ca_file, sequence, ca_coords)
     all_results = []
     seq_by_len = FileUtils.decompress_pickle('seq_by_len_comp.pbz2')
-    num_of_mutations = 40
+    num_of_mutations = 100
     seq_len_distribution = seq_mutation.calc_distribution_for_sequance(sequence, seq_by_len) 
     for i in range(num_of_mutations):
         data = {}
