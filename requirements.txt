@@ -3,3 +3,4 @@ numpy~=1.19.5
 bio~=0.5.0
 matplotlib~=3.4.2
 pymolPy3~=0.1.2
+logomaker~=0.8
