@@ -1,37 +1,50 @@
-Files:
-
-1. HackatonUtils.py:
-for preprocessing the data for the network (output/input)
-
-    functions you might need to use:
-    1. get_sequence - receives a path to fasta file and returns its sequence (String)
-    2. get_seq_aa - same as ex4
-    3. generate_input - receives a path to a fasta file / sequence (string) and returns its one-hot encoding in a 140*22
-    matrix (to use as input for the trained network)
-    4. generate_label - receives a path to a pdb file and returns its Ca x,y,z coordinates in a 140*3 matrix
-    (to use as output for the trained network). YOU PROBABLY WON'T NEED TO USE THIS FUNCTION, IF YOU ARE USING IT, TALK
-    TO ME FIRST (IT ONLY WORKS AFTER ALIGNMENT)!
-
-2. HackatonCatoPDB:
-for converting the network output to PDB file (only ca atoms)
-usage-  python3 HackatonCatoPDB.py <path to Nb fasta file> <path to the trained network>
-
-outputs a pdb file with the name "<fasta file name>_nanonet_ca.pdb"
+README
 
 
-3. TrainedNanoNet:
-a trained neural network receives a 140*22 matrix (padded one-hot encoding of the whole Nb sequence) and returns a 140*3
-matrix (padded Ca coordinates).
+Input:
+1. model_path - a nanonet trained network model path.
+2. fasta - a “.fasta” file path with a sequence of amino-acids, representing a nanobody to run the tool on.
+3. num_of_mutations - the number of mutations-iterations to perform and create a mutated model
+Output:
+1. mutations distributions.png - Plots the mutations distribution, based on “Position Index” over “# of Mutations”
+2. rmsd_by_id.png - Plots the RMSDs of the different sequences based on “RMSD” over “Mutation ids”
+3. mean_rmsd_by_amount.png - Present a bar plot of “Mean RMSD vs Mutation Amount”
+4. good_freq.png and bad_freq.png - present the logo figures for the "good" and "bad" sequences (by rmsd score), for the frequency of AA mutations
+5. align_img.png - an Alignment of the created model structures with the input model, based on the Fasta sequence. The Reference will be colored Yellow and all the mutated models will be colored Green.
 
-4. AboutMillionSequencesNew.fasta:
-fasta file with ~1M Nb sequences
 
 
-5. UsefulScripts.txt
-a list of useful scripts that you can use (like sequence clustering, alignment, etc)
 
-6. SolvedNbs
-a folder with 6 solved Nbs (fasta and pdb). relevent for the clustering groups.
+Tool pre-requirements:
+1. Python 3.4 and up
+2. The following python package and min versions installed on the above pip:
+   1. tensorflow~=2.5.0
+   2. numpy~=1.19.5
+   3. bio~=0.5.0
+   4. matplotlib~=3.4.2
+   5. pymolPy3~=0.1.2
+   6. logomaker=0.8
+   7. pandas=1.2.5
+   8. tqdm~=4.61.1
+3. Pymol installed on the os package manner (and executable via bash run)
+   1. If not installed, please run:
+pip install bioinfo
+module load bioinfo
+pip install pymol
+module load pymol
+4. Make sure to load those modules before running:
+Module load bioinfo
+Module load pymol
+5. Linux OS 
 
-7. AlignmentRef.pdb
-only relevent for the TCR group (I think). You only need it if you are using the get_label() function.
+
+Tool’s Brief:
+Given a path to nanonet model (“model_path”), a .fasta file with a nanobody sequence (“fasta”) and a number of mutations to perform (“num_of_mutations”),
+Our tool:
+* Uses the network to predict the structure of the given Nanobody sequence.
+* Run a mutation process (for “num_of_mutations” iterations) and creates a mutated sequence:
+   * Calculating the number of mutations to perform, based on the Distribution of mutation, pre-calculated by alignment on the DB of nanobodies sequence.
+   * Mutating the sequence randomly with AminoAcids, in the CDRs positions, based on an existing known Distribution of AminoAcids appearance in nature.
+* Perform a prediction of the mutated sequence, using the nanonet model.
+* Calculating the RMSD between the new mutated model and the source one.
+* Constructing a summary of graphs based on the results together with an Alignment Image of the models.
