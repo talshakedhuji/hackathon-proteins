@@ -89,6 +89,13 @@ def present_rmsd(list_of_rmsds, output_directory):
     plt.show()
     plt.savefig(output_directory + '/rmsd_by_id.png')
 
+def print_mutation_done(file, data):
+        "{:<8} {:<15} {:<10}".format('Key', 'Label', 'Number')
+        for k, v in d.iteritems():
+            label, num = v
+        print
+        "{:<8} {:<15} {:<10}".format(k, label, num)
+
 
 def print_report(file, data):
     """
@@ -98,11 +105,10 @@ def print_report(file, data):
     file.write("ID: " + str(data["ID"]) + "\n")
     file.write("# Of Changes Made: " + str(data["num_of_changes"]) + "\n")
     file.write("Mutation Made: " + "\n")
-    # file.write(data["mutations_by_position"] + "\n")
+    file.write(str(data["mutations_by_position"]) + "\n")
     file.write("Mutated Sequence: " + str(data["mutate_seq"]) + "\n")
     file.write("Output File Name: " + str(data["file_name"]) + "\n")
     file.write("RMSD: " + str(data["rmsd"]) + "\n")
-    file.write("RMSD 2: " + str(data["rmsd_2"]) + "\n")
     file.write("\n")
     # print("ID: " + str(data["ID"]))
     # print("# Of Changes Made: " + str(data["num_of_changes"]))
