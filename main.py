@@ -157,7 +157,7 @@ def present_logo(results, sequence, output_directory, prefix):
     plt.close()
     fig = plt.figure()
     fig.set_size_inches(14, 7.5)
-    fig.suptitle(prefix + ' AA freq.', fontsize=16)
+    fig.suptitle(prefix + ' mutations AA freq.', fontsize=16)
     ax1 = plt.subplot2grid((num_rows, num_cols), (0, 0))
     ax2 = plt.subplot2grid((num_rows, num_cols), (1, 0))
     ax3 = plt.subplot2grid((num_rows, num_cols), (2, 0))
@@ -236,7 +236,7 @@ def run(model_path, fasta):
     all_results = []
     f = open('./outputs/summery.txt', 'w')
     seq_by_len = FileUtils.decompress_pickle('seq_by_len_comp.pbz2')
-    num_of_mutations = 500
+    num_of_mutations = 10000
     seq_len_distribution = seq_mutation.calc_distribution_for_sequance(sequence, seq_by_len)
     for i in range(num_of_mutations):
         data = {}
