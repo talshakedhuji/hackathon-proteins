@@ -41,10 +41,10 @@ def get_num_of_diffs(seq1, seq2):
 
 def calc_distribution_for_sequence(sequence, len_to_seq):
     """
-
-    :param sequence:
-    :param len_to_seq:
-    :return:
+    Documented in the scientific reports
+    :param sequence: original sequence
+    :param len_to_seq: seqeunces by length map
+    :return: the distribution
     """
     MAX_CHANGES = len(sequence)
     x = [0] * MAX_CHANGES
@@ -112,6 +112,12 @@ def mutations_by_position(sequence_source:str, dest_sequance:str):
 
 
 def calc_mutate_sequence(sequence: str, num_of_mutations_to_perform: int):
+    """
+    creates mutated sequences
+    :param sequence: original sequence
+    :param num_of_mutations_to_perform: amount of mutations
+    :return: the mutated seqeuence
+    """
     list_seq = list(sequence)
     positions = set()
     while len(positions) != num_of_mutations_to_perform:
