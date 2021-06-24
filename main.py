@@ -207,3 +207,4 @@ def temp_run(): #TODO(rachel): Change to main
 
 if __name__ == "__main__":
     temp_run()
+    print("Program finished successfully")
