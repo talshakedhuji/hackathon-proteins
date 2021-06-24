@@ -166,7 +166,7 @@ def present_logo(results, sequence, title):
     logomaker.Logo(df[0:math.floor(size)],
                    ax=ax1,
                    show_spines=False)
-    logomaker.Logo(df[math.floor(amount):math.floor(2*size)],
+    logomaker.Logo(df[math.floor(size):math.floor(2*size)],
                    ax=ax2,
                    show_spines=False)
     logomaker.Logo(df[math.floor(2*size):],
