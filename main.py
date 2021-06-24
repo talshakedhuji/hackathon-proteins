@@ -152,11 +152,11 @@ def present_logo(results, sequence, output_directory, prefix):
     size = df.shape[0] / 3
     num_cols = 1
     num_rows = 3
-    width_per_col = 700
-    height_per_row = 150
 
+    plt.close()
     fig = plt.figure()
-
+    fig.set_size_inches(14, 7.5)
+    fig.suptitle(prefix + ' AA freq.', fontsize=16)
     ax1 = plt.subplot2grid((num_rows, num_cols), (0, 0))
     ax2 = plt.subplot2grid((num_rows, num_cols), (1, 0))
     ax3 = plt.subplot2grid((num_rows, num_cols), (2, 0))
@@ -173,7 +173,6 @@ def present_logo(results, sequence, output_directory, prefix):
                    ax=ax3,
                    color_scheme='NajafabadiEtAl2017',
                    show_spines=False)
-    fig.suptitle(prefix + ' AA freq.', fontsize=16)
 
     plt.show()
     plt.savefig(output_directory + '/' + prefix + '_freq.png')
