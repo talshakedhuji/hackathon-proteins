@@ -94,6 +94,7 @@ def present_rmsd(list_of_rmsds, output_directory):
 def print_report(file, data):
     """
     print to console the mutated sequence's info
+    :param file: file to print into
     :param data: the mutated sequence's info to export
     """
     file.write("ID: " + str(data["ID"]) + "\n")
