@@ -297,16 +297,15 @@ def run(model_path, fasta, num_of_mutations):
         data["coords"] = predict(nanonet, data["mutate_seq"])
         data["rmsd"] = rmsd_calc(ca_coords, data["coords"])
         data["mutations_by_position"] = seq_mutation.mutations_by_position(sequence, data["mutate_seq"])
-
         all_results.append(data)
-        top_5_rmsd = sorted(all_results, key=lambda x: x["rmsd"])[:5]
-        best_rmsd_files = tuple(map(create_pdb, top_5_rmsd))
-        PyMolUtils.create_pdb_img(original_file_name, best_rmsd_files, output_directory)
-
-
         print_report(f, data)
+
     f.close()
     present_summary_figs(all_results, seq_len_distribution, output_directory, sequence)
+    #call pymol for 5 best PDBs
+    top_5_rmsd = sorted(all_results, key=lambda x: x["rmsd"])[:5]
+    best_rmsd_files = tuple(map(create_pdb, top_5_rmsd))
+    PyMolUtils.create_pdb_img(original_file_name, best_rmsd_files, output_directory)
     print("Done!")
 
 
