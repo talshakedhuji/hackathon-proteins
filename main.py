@@ -76,7 +76,7 @@ def rmsd_calc(coords1, coords2):
     return float("{:0.3f}".format(sup.get_rms()))
 
 
-def present_rmsd(list_of_rmsds):
+def present_rmsd(list_of_rmsds, output_directory):
     """
     plots the RMSDs of the different sequences
     :param list_of_rmsds: list of RMSD scores
@@ -87,6 +87,7 @@ def present_rmsd(list_of_rmsds):
     plt.title('RMSD vs mutation id')
     plt.plot(list_of_rmsds)
     plt.show()
+    plt.savefig(output_directory + '/rmsd_by_id.png')
 
 
 def print_report(data):
@@ -105,11 +106,11 @@ def print_report(data):
 
 
 
-def present_positions_summary(results):
-    present_score_by_mutation_amount(results)
+def present_positions_summary(results, output_directory):
+    present_score_by_mutation_amount(results, output_directory)
 
 
-def present_score_by_mutation_amount(results):
+def present_score_by_mutation_amount(results, output_directory):
     # mutations_by_position = tuple(map(lambda x: x["mutations_by_position"], results))
     # mutations_by_position
 
@@ -132,6 +133,7 @@ def present_score_by_mutation_amount(results):
     plt.title('mean RMSD by mutations amount')
     plt.bar(lengths, means)
     plt.show()
+    plt.savefig(output_directory + '/mean_rmsd_by_amount.png')
 
 
 def run(model_path, fasta):
@@ -171,8 +173,8 @@ def run(model_path, fasta):
             matrix_to_pdb(ca_mutate_file, data["mutate_seq"], data["coords"])
         all_results.append(data)
         print_report(data)
-    present_rmsd(tuple(map(lambda x: x["rmsd"], all_results)))
-    present_positions_summary(all_results)
+    present_rmsd(tuple(map(lambda x: x["rmsd"], all_results)), output_directory)
+    present_positions_summary(all_results, output_directory)
 
 
 def temp_run(): #TODO(rachel): Change to main
