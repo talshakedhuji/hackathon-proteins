@@ -33,3 +33,11 @@ source newenv/bin/activate.csh
 #pip tqdm~=4.61.1
 #module load bioinfo
 #moudle load pymol
+
+virtualenv -p /usr/bin/python3.7 newenv
+source newenv/bin/activate.csh
+module load bioinfo
+module load pymol
+cd project4/newenv/hackathon-proteins/
+pip install -r requirements.txt
+python3 main.py
