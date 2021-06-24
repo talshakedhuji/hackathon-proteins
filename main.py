@@ -194,17 +194,16 @@ def run(model_path, fasta):
 
 
 def temp_run(): #TODO(rachel): Change to main
-    """
-    receives path to a Nb fasta file and a path to a trained neural network and creates a pdb file (Ca only) according to
-    the network prediction. the output file name is: "<fasta file name>_nanonet_ca.pdb"
-    """
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument("fasta", help="Nb fasta file")
-    # parser.add_argument("network", help="nanonet trained model")
-
-    # args = parser.parse_args()
     return run("./TrainedNanoNet", "./SolvedNbs/Nb34/Nb34.fa", )
 
 if __name__ == "__main__":
-    temp_run()
-    print("Program finished successfully")
+    """
+       receives path to a Nb fasta file and a path to a trained neural network and creates a pdb file (Ca only) according to
+       the network prediction. the output file name is: "<fasta file name>_nanonet_ca.pdb"
+       """
+    parser = argparse.ArgumentParser()
+    parser.add_argument("fasta", help="Nb fasta file")
+    parser.add_argument("network", help="nanonet trained model")
+
+    args = parser.parse_args()
+    run(args.network, args.fasta)
