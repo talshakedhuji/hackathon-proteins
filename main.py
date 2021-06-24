@@ -85,6 +85,14 @@ def present_rmsd(list_of_rmsds):
     plt.show()
 
 
+def present_positions_summary(results):
+    present_score_by_mutation_amount(results)
+
+
+def present_score_by_mutation_amount(results):
+    mutations_by_position = tuple(map(lambda x: x["mutations_by_position"], results))
+    mutations_by_position
+
 def run(model_path, fasta):
 
     nanonet = tf.keras.models.load_model(model_path)
@@ -117,6 +125,7 @@ def run(model_path, fasta):
             matrix_to_pdb(ca_mutate_file, data["mutate_seq"], data["coords"])
         all_results.append(data)
     present_rmsd(tuple(map(lambda x: x["rmsd"], all_results)))
+    present_positions_summary(all_results)
 
 
 def temp_run(): #TODO(rachel): Change to main
@@ -130,3 +139,6 @@ def temp_run(): #TODO(rachel): Change to main
 
     # args = parser.parse_args()
     return run("./TrainedNanoNet", "./SolvedNbs/Nb34/Nb34.fa", )
+
+if __name__ == "__main__":
+    temp_run()
