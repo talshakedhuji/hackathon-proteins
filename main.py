@@ -103,13 +103,11 @@ def present_mut_dist(distribution, output_directory):
     :param output_directory: the output directory
     """
     plt.xlabel('Position Index')
-    plt.ylabel('Mutations Counter')
-    plt.title('RMSD vs mutation id')
-    rmsds = tuple(map(lambda x: x["rmsd"], results))
-    ids = tuple(map(lambda x: x["ID"], results))
-    plt.plot(ids, rmsds)
+    plt.ylabel('# of Mutations')
+    plt.title('# of Mutations vs Position ID')
+    plt.plot(tuple(distribution))
     plt.show()
-    plt.savefig(output_directory + '/rmsd_by_id.png')
+    plt.savefig(output_directory + '/mutations distributions.png')
 
 
 def print_report(file, data):
