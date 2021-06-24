@@ -71,7 +71,7 @@ def rmsd_calc(coords1, coords2):
     :return: RMSD score
     """
     sup = SVDSuperimposer()
-    sup.set(coords1, coords2)
+    sup.set(np.array(coords1, "f"), np.array(coords2, "f"))
     sup.run()
     return float("{:0.3f}".format(sup.get_rms()))
 
@@ -90,19 +90,28 @@ def present_rmsd(list_of_rmsds, output_directory):
     plt.savefig(output_directory + '/rmsd_by_id.png')
 
 
-def print_report(data):
+def print_report(file, data):
     """
     print to console the mutated sequence's info
     :param data: the mutated sequence's info to export
     """
-    print("ID: " + str(data["ID"]))
-    print("# Of Changes Made: " + str(data["num_of_changes"]))
-    print("Mutation Made: ")
-    print(data["mutations_by_position"])
-    print("Mutated Sequence: " + str(data["mutate_seq"]))
-    print("Output File Name: " + str(data["file_name"]))
-    print("RMSD: " + str(data["rmsd"]))
-    print(u'\u2500' * 100)
+    file.write("ID: " + str(data["ID"]) + "\n")
+    file.write("# Of Changes Made: " + str(data["num_of_changes"]) + "\n")
+    file.write("Mutation Made: " + "\n")
+    # file.write(data["mutations_by_position"] + "\n")
+    file.write("Mutated Sequence: " + str(data["mutate_seq"]) + "\n")
+    file.write("Output File Name: " + str(data["file_name"]) + "\n")
+    file.write("RMSD: " + str(data["rmsd"]) + "\n")
+    file.write("RMSD 2: " + str(data["rmsd_2"]) + "\n")
+    file.write("\n")
+    # print("ID: " + str(data["ID"]))
+    # print("# Of Changes Made: " + str(data["num_of_changes"]))
+    # print("Mutation Made: ")
+    # print(data["mutations_by_position"])
+    # print("Mutated Sequence: " + str(data["mutate_seq"]))
+    # print("Output File Name: " + str(data["file_name"]))
+    # print("RMSD: " + str(data["rmsd"]))
+    # print(u'\u2500' * 100)
 
 
 
@@ -158,11 +167,16 @@ def run(model_path, fasta):
     all_results = []
     seq_by_len = FileUtils.decompress_pickle('seq_by_len_comp.pbz2')
     num_of_mutations = 40
-    seq_len_distribution = seq_mutation.calc_distribution_for_sequance(sequence, seq_by_len) 
+    seq_len_distribution = seq_mutation.calc_distribution_for_sequance(sequence, seq_by_len)
+
+    f = open('./outputs/summery.txt', 'w')
+
+    num_of_mutations = 100
+    seq_len_distribution = seq_mutation.calc_distribution_for_sequance(sequence, seq_by_len)
     for i in range(num_of_mutations):
         data = {}
         mutations_by_position = {}
-        data["ID"] = i
+        data["ID"] = i + 1
         data["num_of_changes"] = seq_mutation.get_num_of_mutation(seq_len_distribution)
         data["mutate_seq"] = seq_mutation.calc_mutate_sequence(sequence, data["num_of_changes"], mutations_by_position)
         data["coords"] = predict(nanonet, data["mutate_seq"])
@@ -172,7 +186,9 @@ def run(model_path, fasta):
         with open(data["file_name"], "w") as ca_mutate_file:
             matrix_to_pdb(ca_mutate_file, data["mutate_seq"], data["coords"])
         all_results.append(data)
-        print_report(data)
+        print_report(f, data)
+
+    f.close()
     present_rmsd(tuple(map(lambda x: x["rmsd"], all_results)), output_directory)
     present_positions_summary(all_results, output_directory)
 
