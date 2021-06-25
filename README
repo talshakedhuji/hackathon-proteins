@@ -2,7 +2,8 @@
 1. model_path - a nanonet trained network model path.
 2. fasta - a “.fasta” file path with a sequence of amino-acids, representing a nanobody to run the tool on.
 3. num_of_mutations - the number of mutations-iterations to perform and create a mutated model
-Output:
+
+## Output:
 1. mutations distributions.png - Plots the mutations distribution, based on “Position Index” over “# of Mutations”
 2. rmsd_by_id.png - Plots the RMSDs of the different sequences based on “RMSD” over “Mutation ids”
 3. mean_rmsd_by_amount.png - Present a bar plot of “Mean RMSD vs Mutation Amount”
