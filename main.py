@@ -47,7 +47,9 @@ def matrix_to_pdb(pdb_file, seq, coord_matrix):
                 three = "UNK"
             else:
                 three = Polypeptide.one_to_three(seq[aa])
-            pdb_file.write(ATOM_LINE.format(first_space, i, three, second_space, i, third_space, coord_matrix[aa][0],forth_space, coord_matrix[aa][1],fifth_space, coord_matrix[aa][2]))
+            pdb_file.write(
+                ATOM_LINE.format(first_space, i, three, second_space, i, third_space, coord_matrix[aa][0], forth_space,
+                                 coord_matrix[aa][1], fifth_space, coord_matrix[aa][2]))
             i += 1
     pdb_file.write(END_LINE)
 
@@ -103,7 +105,6 @@ def present_mut_dist(distribution, output_directory):
     plt.plot(tuple(distribution))
     plt.savefig(output_directory + '/mutations distributions.png')
     plt.show()
-
 
 
 def print_report(file, data):
@@ -181,7 +182,7 @@ def present_logo(results, sequence, output_directory, prefix):
     amount = float(len(results))
     for aa in counts_map:
         for i in range(len(counts_map[aa])):
-            counts_map[aa][i] = counts_map[aa][i]/amount
+            counts_map[aa][i] = counts_map[aa][i] / amount
 
     df = pd.DataFrame.from_dict(counts_map)
 
@@ -201,17 +202,18 @@ def present_logo(results, sequence, output_directory, prefix):
                    ax=ax1,
                    color_scheme='NajafabadiEtAl2017',
                    show_spines=False)
-    logomaker.Logo(df[math.floor(size):math.floor(2*size)],
+    logomaker.Logo(df[math.floor(size):math.floor(2 * size)],
                    ax=ax2,
                    color_scheme='NajafabadiEtAl2017',
                    show_spines=False)
-    logomaker.Logo(df[math.floor(2*size):],
+    logomaker.Logo(df[math.floor(2 * size):],
                    ax=ax3,
                    color_scheme='NajafabadiEtAl2017',
                    show_spines=False)
 
     plt.savefig(output_directory + '/' + prefix + '_freq.png')
     plt.show()
+
 
 def present_score_by_mutation_amount(results, output_directory):
     """
@@ -231,7 +233,7 @@ def present_score_by_mutation_amount(results, output_directory):
     means = []
     lengths = []
     for key in scores_by_lengths:
-        means.append(sum(scores_by_lengths[key])/len(scores_by_lengths[key]))
+        means.append(sum(scores_by_lengths[key]) / len(scores_by_lengths[key]))
         lengths.append(key)
 
     plt.xlabel('mutations amount')
@@ -240,6 +242,7 @@ def present_score_by_mutation_amount(results, output_directory):
     plt.bar(lengths, means)
     plt.savefig(output_directory + '/mean_rmsd_by_amount.png')
     plt.show()
+
 
 def clear_ouput_directory(path):
     """
@@ -254,23 +257,25 @@ def clear_ouput_directory(path):
     except:
         raise SystemExit('Error: could not delete the content of the output directory')
 
+
 def create_pdb(data):
     filename = "./outputs/mutated_{}.pdb".format(data["ID"])
     with open(filename, "w") as ca_mutate_file:
         matrix_to_pdb(ca_mutate_file, data["mutate_seq"], data["coords"])
     return filename
 
-def run(model_path, fasta, num_of_mutations):
+
+def run(model_path, fasta_file_path, num_of_mutations):
     """
        runs the mutation generation
+       :param num_of_mutations: the given num of iterations to preform mutations
        :param model_path: path to nanonet model
-       :param fasta: file of the sequence to be mutated
-       :return:
+       :param fasta_file_path: file of the sequence to be mutated
        """
     nanonet = tf.keras.models.load_model(model_path)
     # nanobody sequence
     file_name = "./SolvedNbs/Nb34/Nb34.fa"
-    sequence = utils.get_sequence(fasta)
+    sequence = utils.get_sequence(fasta_file_path)
 
     # Create output directory
     output_directory = "./outputs"
@@ -302,7 +307,7 @@ def run(model_path, fasta, num_of_mutations):
 
     f.close()
     present_summary_figs(all_results, seq_len_distribution, output_directory, sequence)
-    #call pymol for 5 best PDBs
+    # call pymol for 5 best PDBs
     top_5_rmsd = sorted(all_results, key=lambda x: x["rmsd"])[:5]
     best_rmsd_files = tuple(map(create_pdb, top_5_rmsd))
     PyMolUtils.create_pdb_img(original_file_name, best_rmsd_files, output_directory)
@@ -310,18 +315,22 @@ def run(model_path, fasta, num_of_mutations):
 
 
 def temp_run():
-    return run("./TrainedNanoNet", "./SolvedNbs/Nb34/Nb34.fa", 100)
+    return run(model_path="./TrainedNanoNet",
+               fasta_file_path="./SolvedNbs/Nb34/Nb34.fa",
+               num_of_mutations=100)
+
 
 if __name__ == "__main__":
     """
-       receives path to a Nb fasta file and a path to a trained neural network and creates a pdb file (Ca only) according to
-       the network prediction. the output file name is: "<fasta file name>_nanonet_ca.pdb"
-       """
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument("fasta", help="Nb fasta file")
-    # parser.add_argument("network", help="nanonet trained model")
-    # parser.add_argument("num_of_mutations", help="nanonet trained model", default=100)
+       receives path to a Nb fasta file and a path to a trained neural network and creates a pdb file (Ca only) 
+       according to the network prediction. the output file name is: "<fasta file name>_nanonet_ca.pdb"
+    """
 
-    # args = parser.parse_args()
-    # run(args.network, args.fasta, args.num_of_mutations)
-    temp_run()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("fasta", help="Nb fasta file path")
+    parser.add_argument("network", help="nanonet trained model path")
+    parser.add_argument("num_of_mutations", help="nanonet trained model, default is set to 100", default=100)
+
+    args = parser.parse_args()
+    run(args.network, args.fasta, args.num_of_mutations)
+    # temp_run()
