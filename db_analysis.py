@@ -6,7 +6,7 @@ AA_NAMES = ["A", "C", "D", "E", "F", "G", "H", "I", "K", "L", "M", "N", "P", "Q"
             "X"]
 
 
-def get_sequence(fasta_filename_input):
+def get_sequences(fasta_filename_input):
     """
     Returns a list of sequences from the given fasta file
     :param fasta_filename: name of the fasta file to be parsed
@@ -57,7 +57,7 @@ def extract_AA_frequencies(sequences):
 
 if __name__ == '__main__':
     fasta_filename = "AboutMillionSequencesNew.fasta"
-    sequences = get_sequence(fasta_filename)
+    sequences = get_sequences(fasta_filename)
     seq_by_length = extract_lengths(sequences)
     freq_dict = extract_AA_frequencies(sequences)
 
