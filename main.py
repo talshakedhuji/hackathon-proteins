@@ -349,11 +349,11 @@ if __name__ == "__main__":
        according to the network prediction. the output file name is: "<fasta file name>_nanonet_ca.pdb"
     """
 
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument("fasta", help="Nb fasta file path")
-    # parser.add_argument("network", help="nanonet trained model path")
-    # parser.add_argument("num_of_mutations", help="nanonet trained model, default is set to 100", default=100)
-    #
-    # args = parser.parse_args()
-    # run(args.network, args.fasta, args.num_of_mutations)
-    temp_run()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("fasta", help="Nb fasta file path")
+    parser.add_argument("network", help="nanonet trained model path")
+    parser.add_argument("num_of_mutations", help="nanonet trained model, default is set to 100", default=100)
+
+    args = parser.parse_args()
+    run(args.network, args.fasta, args.num_of_mutations)
+    # temp_run()
