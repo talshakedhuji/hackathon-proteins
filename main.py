@@ -5,6 +5,7 @@ import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 from tqdm import tqdm
+import pickle as pkl
 
 import HackatonUtils as utils
 import seq_mutation
@@ -217,19 +218,37 @@ def present_logo(results, sequence, output_directory, prefix):
 
 def present_score_by_mutation_amount(results, output_directory):
     """
-    present bar plot of mean rmsd vs mutation amount
+    present bar plots of counts vs mutation amount and of mean rmsd vs mutation amount
     :param results: results of the run
     :param output_directory: path to save the figure
     :return:
     """
     scores_by_lengths = {}
+    counts_by_lengths = {}
     for res in results:
         num_of_mutation = res["num_of_changes"]
         if num_of_mutation in scores_by_lengths:
             scores_by_lengths[num_of_mutation].append(res["rmsd"])
+            counts_by_lengths[num_of_mutation] += 1
         else:
             scores_by_lengths[num_of_mutation] = [res["rmsd"]]
+            counts_by_lengths[num_of_mutation] = 1
 
+    # counts of mutation amount figure:
+    lengths = []
+    counts = []
+    for key in counts_by_lengths:
+        lengths.append(key)
+        counts.append(counts_by_lengths[key])
+
+    plt.xlabel('mutations amount')
+    plt.ylabel('counts')
+    plt.title('counts by mutations amount')
+    plt.bar(lengths, counts)
+    plt.savefig(output_directory + '/counts_by_amount.png')
+    plt.show()
+
+    # mean RMSD mutation amount figure:
     means = []
     lengths = []
     for key in scores_by_lengths:
@@ -306,8 +325,12 @@ def run(model_path, fasta_file_path, num_of_mutations):
         print_report(f, data)
 
     f.close()
+    with open('outputs/results.pickle', 'wb') as handle:
+        pkl.dump(all_results, handle)
     present_summary_figs(all_results, seq_len_distribution, output_directory, sequence)
     # call pymol for 5 best PDBs
+
+    #call pymol for 5 best PDBs
     top_5_rmsd = sorted(all_results, key=lambda x: x["rmsd"])[:5]
     best_rmsd_files = tuple(map(create_pdb, top_5_rmsd))
     PyMolUtils.create_pdb_img(original_file_name, best_rmsd_files, output_directory)
@@ -317,7 +340,7 @@ def run(model_path, fasta_file_path, num_of_mutations):
 def temp_run():
     return run(model_path="./TrainedNanoNet",
                fasta_file_path="./SolvedNbs/Nb34/Nb34.fa",
-               num_of_mutations=100)
+               num_of_mutations=10)
 
 
 if __name__ == "__main__":
@@ -326,11 +349,11 @@ if __name__ == "__main__":
        according to the network prediction. the output file name is: "<fasta file name>_nanonet_ca.pdb"
     """
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument("fasta", help="Nb fasta file path")
-    parser.add_argument("network", help="nanonet trained model path")
-    parser.add_argument("num_of_mutations", help="nanonet trained model, default is set to 100", default=100)
-
-    args = parser.parse_args()
-    run(args.network, args.fasta, args.num_of_mutations)
-    # temp_run()
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument("fasta", help="Nb fasta file path")
+    # parser.add_argument("network", help="nanonet trained model path")
+    # parser.add_argument("num_of_mutations", help="nanonet trained model, default is set to 100", default=100)
+    #
+    # args = parser.parse_args()
+    # run(args.network, args.fasta, args.num_of_mutations)
+    temp_run()
