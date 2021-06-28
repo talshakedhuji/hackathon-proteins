@@ -2,6 +2,8 @@ import random
 import numpy
 import cdr_annotation
 from Bio import pairwise2
+from termcolor import colored
+
 # http://www.tiem.utk.edu/~gross/bioed/webmodules/aminoacid.htm
 # Distribution of AA in Human body
 AMINO_ACID_DIST = {
@@ -57,7 +59,7 @@ def calc_distribution_for_sequence(sequence, len_to_seq_data):
         if diffs > max_changes or diffs == 0:
             continue
         x[diffs - 1] += 1
-    print("Distribution of mutation was calculated successfully")
+    print(colored("Distribution of mutation was calculated successfully", 'green'))
     return x
 
 
