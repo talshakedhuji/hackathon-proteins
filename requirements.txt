@@ -6,3 +6,4 @@ pymolPy3~=0.1.2
 logomaker~=0.8
 pandas~=1.2.5
 tqdm~=4.61.1
+termcolor~=1.1.0
