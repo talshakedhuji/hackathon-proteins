@@ -103,8 +103,8 @@ def present_mut_dist(distribution, output_directory):
     """
     plt.xlabel('num of changes')
     plt.ylabel('percent')
-    plt.title('Percent of mutations in the DB as a factor of the num of changed in a mutation (all sequences are in the same length')
-    plt.bar(np.array(range(len(distribution)))+1, tuple(distribution)*100)
+    plt.title('Percent of mutations (in DB) by the num of changed in a mutation\n[all sequences are in the same length]')
+    plt.bar(np.array(range(len(distribution)))+1, np.array(distribution)*100)
     plt.savefig(output_directory + '/mutations distributions.png')
     plt.show()
 
@@ -314,6 +314,7 @@ def run(model_path='./TrainedNanoNet', fasta_file_path='./SolvedNbs/Nb34/Nb34.fa
     f = open('./outputs/summery.txt', 'w')
     seq_by_len = FileUtils.decompress_pickle('seq_by_len_comp.pbz2')
     seq_len_distribution = seq_mutation.calc_distribution_for_sequence(sequence, seq_by_len)
+    present_mut_dist(seq_len_distribution, output_directory)
     for i in tqdm(range(0, num_of_mutations), desc=f'Generating mutation sequences...'):
         data = {}
         data["ID"] = i
