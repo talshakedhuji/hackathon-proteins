@@ -285,7 +285,7 @@ def create_pdb(data):
     return filename
 
 
-def run(model_path, fasta_file_path, num_of_mutations):
+def run(model_path'./TrainedNanoNet', fasta_file_path='./SolvedNbs/Nb34/Nb34.fa', num_of_mutations=1000):
     """
        runs the mutation generation
        :param num_of_mutations: the given num of iterations to preform mutations
