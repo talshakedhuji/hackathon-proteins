@@ -59,8 +59,8 @@ def calc_distribution_for_sequence(sequence, len_to_seq_data):
         if diffs > max_changes or diffs == 0:
             continue
         x[diffs - 1] += 1
-    print(colored("Distribution of mutation was calculated successfully", 'green'))
-    return x
+    print("Distribution of mutation was calculated successfully")
+    return numpy.array(x)/sum(x)
 
 
 def get_num_of_mutation(distribution):

@@ -101,10 +101,10 @@ def present_mut_dist(distribution, output_directory):
     :param distribution: the data to plot
     :param output_directory: the output directory
     """
-    plt.xlabel('Position Index')
-    plt.ylabel('# of Mutations')
-    plt.title('# of Mutations vs Position ID')
-    plt.plot(tuple(distribution))
+    plt.xlabel('num of changes')
+    plt.ylabel('percent')
+    plt.title('Percent of mutations in the DB as a factor of the num of changed in a mutation (all sequences are in the same length')
+    plt.bar(np.array(range(len(distribution)))+1, tuple(distribution)*100)
     plt.savefig(output_directory + '/mutations distributions.png')
     plt.show()
 
@@ -359,4 +359,3 @@ if __name__ == "__main__":
     msg_info = "received params: " + args.network + " , " + args.fasta + " , " + args.num_of_mutations
     print(colored(msg_info, 'green'))
     run(args.network, args.fasta, int(args.num_of_mutations))
-    # temp_run()
