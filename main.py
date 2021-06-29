@@ -291,7 +291,7 @@ def run(model_path'./TrainedNanoNet', fasta_file_path='./SolvedNbs/Nb34/Nb34.fa'
        :param num_of_mutations: the given num of iterations to preform mutations
        :param model_path: path to nanonet model
        :param fasta_file_path: file of the sequence to be mutated
-       """
+    """
     nanonet = tf.keras.models.load_model(model_path)
     # nanobody sequence
     file_name = "./SolvedNbs/Nb34/Nb34.fa"
